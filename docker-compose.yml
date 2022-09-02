@@ -18,4 +18,14 @@ services:
     image: adminer
     restart: always
     ports:
+      - 8082:8080
+
+  web-node:
+    build: .
+    restart: always
+    ports:
       - 8080:8080
+    env_file:
+      - .env  
+    depends_on:
+      - db
