@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "connect4-ai": "^0.1.3"
+  }
+}
