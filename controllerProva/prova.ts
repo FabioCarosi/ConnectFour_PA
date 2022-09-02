@@ -1,4 +1,5 @@
 const { Connect4AI } = require('./index');
+const { Connect4 } = require('./index');
 //rotta per creare una partita
 export async function startGame(req: any): Promise<void> {
     /*la richiesta contiene l'email dell'user richiedente e l'email dell'user destinatario
