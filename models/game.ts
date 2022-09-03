@@ -1,8 +1,8 @@
-import { DataTypes, Model, Sequelize } from "sequelize";
+import { DataTypes, Sequelize } from "sequelize";
 import { Singleton } from "./singletonDB";
 import { User } from "./user"
  
-const connection: Sequelize = Singleton.getConnection();
+const connection: Sequelize = Singleton.getInstance();
 
 export const Game = connection.define("game", {
     id_game: { 
@@ -23,7 +23,7 @@ export const Game = connection.define("game", {
     },
     startTime: {
         type: DataTypes.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP(3)'),
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         allowNull: false
     },
     winner: {
@@ -37,7 +37,7 @@ export const Game = connection.define("game", {
     }
 });
 
-Game.belongsTo(User, {foreignKey: "playerOne",  targetKey: "email"});
+/*Game.belongsTo(User, {foreignKey: "playerOne",  targetKey: "email"});
 Game.belongsTo(User, {foreignKey: "playerTwo",  targetKey: "email"});
 Game.belongsTo(User, {foreignKey: "winner",  targetKey: "email"});
 
@@ -49,6 +49,7 @@ Game.belongsTo(User, {foreignKey: "winner",  targetKey: "email"});
 /*
 imposta stato a attivo quando viene creato un nuovo gioco
 */
+/*
 export async function changeState(req: any, res: any) {
     
-}
+}*/

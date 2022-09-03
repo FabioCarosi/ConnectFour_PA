@@ -1,7 +1,7 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
 import { Singleton } from "./singletonDB";
 
-const connection: Sequelize = Singleton.getConnection();
+const connection: Sequelize = Singleton.getInstance();
 
 export const User = connection.define("user", {
     email: { 
@@ -22,3 +22,5 @@ export const User = connection.define("user", {
   await connection.sync({ force: true });
   // Code here
 })();
+
+//funzione asincrona che aggiorna il credito dell'utente

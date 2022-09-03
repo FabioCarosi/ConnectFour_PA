@@ -3,9 +3,9 @@ import { Singleton } from "./singletonDB";
 import { User } from "./user";
 import { Game } from "./game";
 
-const connection: Sequelize = Singleton.getConnection();
+const connection: Sequelize = Singleton.getInstance();
 
-const Move = connection.define("move", {
+export const Move = connection.define("move", {
     id_move: { 
         type: DataTypes.BIGINT,
         primaryKey: true,
@@ -16,6 +16,10 @@ const Move = connection.define("move", {
     },
     email_user: {
         type: DataTypes.STRING,
+        allowNull: false
+    },
+    column: {
+        type: DataTypes.TINYINT,
         allowNull: false
     },
     timestamp_move: {
@@ -34,3 +38,15 @@ Game.belongsTo(Game, {foreignKey: "id_game",  targetKey: "id_game"});
   // Code here
 })();
 
+/*
+Restituisce tutte le mosse fatte in una certa partita passando come parametro il suo id 
+*/
+export async function findMovesbyGame(idGame: number){
+    const allMoves = await Move.findAll({
+        where: 
+        { id_game: idGame }, raw: true
+    }
+    );
+
+    return allMoves;
+}
