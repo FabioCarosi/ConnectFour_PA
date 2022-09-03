@@ -28,6 +28,7 @@ export const Game = connection.define("game", {
     },
     winner: {
         type: DataTypes.STRING,
+        defaultValue: "none",
         allowNull: false
     },
     turn: {
@@ -45,3 +46,9 @@ Game.belongsTo(User, {foreignKey: "winner",  targetKey: "email"});
   // Code here
 })();
 
+/*
+imposta stato a attivo quando viene creato un nuovo gioco
+*/
+export async function changeState(req: any, res: any) {
+    
+}

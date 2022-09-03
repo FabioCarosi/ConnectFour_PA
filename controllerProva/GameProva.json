@@ -16,7 +16,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IkNyaXN0aW5hIiwiY3JlZGl0c0F2YWlsYWJsZSI6NSwicm9sZSI6InVzZXIifQ.LMc7BKA9Nv6zivCBOE3j0jAWyFOzibKSvHWHcEvVTRk",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IkNyaXN0aW5hIiwicm9sZSI6InVzZXIifQ.DgT9k8j7Mk3YHl6U1QLiO862tdkmbDba1tM9-veFB7E",
 									"type": "string"
 								}
 							]
@@ -31,7 +31,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"email\":Cristina \"CreditsAvailable\": 5,\n  \"email_Destinatario\": Fabio,\n  \"CreditsAvailableOpp\": 10\n}"
+							"raw": "{\n  \"email\":Cristina \n  \"email_Destinatario\": Fabio,\n}"
 						},
 						"url": {
 							"raw": "localhost:8080/startGame",
