@@ -1,4 +1,4 @@
-import { DataTypes, Sequelize } from "sequelize";
+import { DataTypes, Model, Sequelize } from "sequelize";
 import { Singleton } from "./singletonDB";
 import { User } from "./user"
  
@@ -38,6 +38,7 @@ export const Game = connection.define("game", {
     {
         timestamps: false
     }
+    
 );
 
 /*Game.belongsTo(User, {foreignKey: "playerOne",  targetKey: "email"});
