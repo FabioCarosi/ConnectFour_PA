@@ -33,9 +33,9 @@ app.post('/startGame', (req, res) =>{
 
 
 //This root allows to make a move in the corrisponding game
-/*
-app.post('/makeMove', (res, req) => {
+
+app.post('/makeMove', (req, res) => {
     controller.makeMove(req, res);
 })
-*/
+
 app.listen(PORT,HOST);

@@ -15,36 +15,38 @@ export const Move = connection.define("move", {
         allowNull: false
     },
     email_user: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(),
         allowNull: false
     },
-    column: {
-        type: DataTypes.TINYINT,
+    column_move: {
+        type: DataTypes.TINYINT(),
         allowNull: false
     },
     timestamp_move: {
         type: DataTypes.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP(3)'),
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         allowNull: false
+    }},
+    {
+        timestamps: false
     }
-});
+);
 
-Game.belongsTo(User, {foreignKey: "email_user",  targetKey: "email"});
-Game.belongsTo(Game, {foreignKey: "id_game",  targetKey: "id_game"});
+/*Game.belongsTo(User, {foreignKey: "email_user",  targetKey: "email"});
+Game.belongsTo(Game, {foreignKey: "id_game",  targetKey: "id_game"});*/
 
 
-(async () => {
-  await connection.sync({ force: true });
-  // Code here
-})();
+
 
 /*
 Restituisce tutte le mosse fatte in una certa partita passando come parametro il suo id 
 */
-export async function findMovesbyGame(idGame: number){
-    const allMoves = await Move.findAll({
+export async function findMovesbyGame(idGame: any){
+    const allMoves= await Move.findAll({
         where: 
-        { id_game: idGame }, raw: true
+        { id_game: idGame }, 
+        //attributes: ['column_move'],
+        raw: true
     }
     );
 
