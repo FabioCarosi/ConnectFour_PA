@@ -13,8 +13,8 @@ export async function startGame(req: any, res:any): Promise<void> {
     await GameClass.Game.create(req.body).then((game:any) =>{
       console.log("Game has started");
       const newGame = new Connect4();
-      res.send(newGame.ascii());
-      res.send(newGame.gameStatus());
+      res.send({ "image": newGame.ascii(), "status":newGame.gameStatus()});
+      console.log("Body has been sent");
       const email = game.playerOne;
       //con sequelize aggiorna credito --> mettila in user.ts
     });

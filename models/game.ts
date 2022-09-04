@@ -10,15 +10,15 @@ export const Game = connection.define("game", {
         primaryKey: true,
         autoIncrement: true},
     playerOne: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(),
         allowNull: false
     },
     playerTwo: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(),
         allowNull: false
     },
     status:{
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(),
         allowNull: false
     },
     startTime: {
@@ -27,15 +27,18 @@ export const Game = connection.define("game", {
         allowNull: false
     },
     winner: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(),
         defaultValue: "none",
         allowNull: false
     },
     turn: {
-        type: DataTypes.TINYINT,
+        type: DataTypes.TINYINT(),
         allowNull: false
+    }},
+    {
+        timestamps: false
     }
-});
+);
 
 /*Game.belongsTo(User, {foreignKey: "playerOne",  targetKey: "email"});
 Game.belongsTo(User, {foreignKey: "playerTwo",  targetKey: "email"});
