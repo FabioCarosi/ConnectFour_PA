@@ -8,7 +8,6 @@ CREATE TABLE user (
   email varchar(50) NOT NULL,
   credit int NOT NULL,
   role varchar(50) NOT NULL,
-  name varchar(50) NOT NULL,
   PRIMARY KEY (email)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -38,8 +37,8 @@ CREATE TABLE move (
 
 
 
-INSERT INTO user (email, credit, role, name) VALUES
-('admin@email.com',	100,	'admin',	'Admin'),
-('ai',	100,	'ai',	'AI'),
-('player1@email.com',	100,	'player',	'Cristina'),
-('player2@email.com',	100,	'player',	'Fabio');
+INSERT INTO user (email, credit, role) VALUES
+('admin@email.com',	100,	'admin'),
+('ai',	100,	'ai'),
+('player1@email.com',	100,	'player'),
+('player2@email.com',	100,	'player');
