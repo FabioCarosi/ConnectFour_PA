@@ -34,6 +34,11 @@ export const Game = connection.define("game", {
     turn: {
         type: DataTypes.TINYINT(),
         allowNull: false
+    },
+    difficulty: {
+        type: DataTypes.STRING(),
+        allowNull : true,
+        defaultValue: "medium"
     }},
     {
         timestamps: false
@@ -57,3 +62,15 @@ imposta stato a attivo quando viene creato un nuovo gioco
 export async function changeState(req: any, res: any) {
     
 }*/
+
+export async function getDifficulty(idGame: any){
+    const difficulty = await Game.findOne({
+  
+        where: { id_game: idGame },
+        attributes: ['difficulty'],
+        raw: true,
+    
+      });
+      
+    return difficulty;
+}

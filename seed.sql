@@ -20,6 +20,7 @@ CREATE TABLE game (
   startTime timestamp NOT NULL DEFAULT current_timestamp(),
   winner varchar(50) DEFAULT NULL,
   turn tinyint(1) NOT NULL,
+  difficulty varchar(10) DEFAULT 'medium',
   PRIMARY KEY (id_game)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

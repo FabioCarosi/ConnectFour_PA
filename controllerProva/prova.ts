@@ -5,6 +5,10 @@ import * as HvsH from '../node_modules/connect4-ai/human-vs-human';
 import * as GameClass from '../models/game';
 import * as MoveClass from '../models/move';
 import * as UserClass from '../models/user';
+
+
+
+
 //rotta per creare una partita
 
 export async function startGame(req: any, res:any): Promise<void> {
@@ -53,28 +57,21 @@ export async function makeMove(req:any,res:any){
         
           //find all moves corrisponding to id_game of current game
           const allMoves = MoveClass.findMovesbyGame(move.id_game).then((movesByGame: any) => {
-            console.log(movesByGame);
+            console.log(movesByGame); //array of objects where every object is a move in the game
             
             movesByGame.forEach(el => moveArr.push(el.column_move));
-            console.log(moveArr); //output: [ 1 ]
+            console.log(moveArr); //array of moves (columns) in the game
 
             console.log("Moves found in game");
+            //find playerTwo in the game to select IA or UserVSUser mode
             let userTwo =  UserClass.findPlayerTwoByGame(move.id_game).then((gameFound: any) => {
-              console.log(gameFound);
-              console.log(typeof(gameFound));
-              //gameFound.forEach(el => console.log(el.playerTwo, " ", typeof(el.playerTwo)));
-              console.log(gameFound.playerTwo);
-              console.log(typeof(gameFound.playerTwo));
+              console.log(gameFound); //an object representing the game 
+              console.log(typeof(gameFound)); //object
+            
+              console.log(gameFound.playerTwo); //email of the second user
+              console.log(typeof(gameFound.playerTwo)); //string
 
-              let newGame;
-              if(gameFound.playerTwo == "Fabio"){
-                console.log("parte l'if");
-                newGame = new Connect4();
-              }
-              else{
-                console.log("parte l'else");
-                newGame = new Connect4AI();
-              }
+              let newGame = new Connect4AI(); 
 
               console.log("game");
 
@@ -82,6 +79,34 @@ export async function makeMove(req:any,res:any){
               console.log(newGame.ascii());
               console.log(newGame.gameStatus());
 
+              if(gameFound.playerTwo === "ai"){
+                console.log("parte l'if");
+                const difficulty = GameClass.getDifficulty(move.id_game).then((diff: any) => {
+                  console.log(diff.difficulty);
+                  console.log(typeof(diff.difficulty));
+                  const play = newGame.playAI(diff.difficulty);
+                  console.log(play);
+                  console.log(newGame.ascii());
+                  console.log(newGame.gameStatus());
+                  //create AI move in db
+                   if(!newGame.gameStatus().gameOver) {
+                    MoveClass.Move.create( {
+                    "id_game": req.body.id_game,
+                    "email_user": "ai",
+                    "column_move": play
+                  });
+                }
+                });
+
+                
+                
+
+              }
+              else{
+                console.log("parte l'else"); 
+              }
+
+             
             });
 
            
@@ -90,7 +115,9 @@ export async function makeMove(req:any,res:any){
 
           
       });
-    
+      
+      
+
     }
     catch(err){
       res.send("An error has occurred...");
