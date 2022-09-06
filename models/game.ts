@@ -19,6 +19,7 @@ export const Game = connection.define("game", {
     },
     status:{
         type: DataTypes.STRING(),
+        defaultValue: "Created",
         allowNull: false
     },
     startTime: {
@@ -32,7 +33,8 @@ export const Game = connection.define("game", {
         allowNull: false
     },
     turn: {
-        type: DataTypes.TINYINT(),
+        type: DataTypes.STRING(),
+        defaultValue: "current player",
         allowNull: false
     },
     difficulty: {
@@ -50,18 +52,16 @@ export const Game = connection.define("game", {
 Game.belongsTo(User, {foreignKey: "playerTwo",  targetKey: "email"});
 Game.belongsTo(User, {foreignKey: "winner",  targetKey: "email"});
 
-(async () => {
-  await connection.sync({ force: true });
-  // Code here
-})();
 
 /*
-imposta stato a attivo quando viene creato un nuovo gioco
+update game status in "In progress" when a new game is created
 */
-/*
-export async function changeState(req: any, res: any) {
-    
-}*/
+Game.addHook('afterCreate', async (game: any, options) => {
+    await game.update({"status": "In progress", "turn": game.playerOne});
+});
+
+
+
 
 export async function getDifficulty(idGame: any){
     const difficulty = await Game.findOne({

@@ -16,10 +16,10 @@ CREATE TABLE game (
   id_game bigint unsigned NOT NULL AUTO_INCREMENT,
   playerOne varchar(50) NOT NULL,
   playerTwo varchar(50) NOT NULL,
-  status varchar(50) NOT NULL,
+  status varchar(50) NOT NULL DEFAULT 'Created',
   startTime timestamp NOT NULL DEFAULT current_timestamp(),
   winner varchar(50) DEFAULT NULL,
-  turn tinyint(1) NOT NULL,
+  turn varchar(50) NOT NULL DEFAULT 'current player',
   difficulty varchar(10) DEFAULT 'medium',
   PRIMARY KEY (id_game)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

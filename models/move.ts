@@ -1,7 +1,7 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
 import { Singleton } from "./singletonDB";
-import { User } from "./user";
-import { Game } from "./game";
+import * as UserClass from "./user";
+import * as GameClass from "./game";
 
 const connection: Sequelize = Singleton.getInstance();
 
