@@ -17,7 +17,11 @@ export const User = connection.define("user", {
         type: DataTypes.STRING(),
         allowNull: false
     }
-});
+  },
+    {
+      timestamps: false
+  }
+);
 
 
 //funzione asincrona che aggiorna il credito dell'utente

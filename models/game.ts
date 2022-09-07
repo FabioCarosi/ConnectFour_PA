@@ -55,11 +55,11 @@ Game.belongsTo(User, {foreignKey: "winner",  targetKey: "email"});
 
 /*
 update game status in "In progress" when a new game is created
+When playerOne creates the game, it is playerOne's turn
 */
 Game.addHook('afterCreate', async (game: any, options) => {
     await game.update({"status": "In progress", "turn": game.playerOne});
 });
-
 
 
 
@@ -74,3 +74,4 @@ export async function getDifficulty(idGame: any){
       
     return difficulty;
 }
+

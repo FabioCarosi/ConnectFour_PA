@@ -29,7 +29,6 @@ DROP TABLE IF EXISTS move;
 CREATE TABLE move (
   id_move bigint NOT NULL AUTO_INCREMENT,
   id_game bigint NOT NULL,
-  email_user varchar(50) NOT NULL,
   column_move tinyint(1) NOT NULL,
   timestamp_move timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (id_move)

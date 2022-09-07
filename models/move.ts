@@ -14,10 +14,6 @@ export const Move = connection.define("move", {
         type: DataTypes.BIGINT,
         allowNull: false
     },
-    email_user: {
-        type: DataTypes.STRING(),
-        allowNull: false
-    },
     column_move: {
         type: DataTypes.TINYINT(),
         allowNull: false
@@ -35,8 +31,31 @@ export const Move = connection.define("move", {
 /*Game.belongsTo(User, {foreignKey: "email_user",  targetKey: "email"});
 Game.belongsTo(Game, {foreignKey: "id_game",  targetKey: "id_game"});*/
 
-
-
+/*Once that a move is made, the game's turn changes to the next player*/
+Move.addHook('afterCreate', async (move: any, options) => {
+    await GameClass.Game.findOne({
+        where:
+        {id_game: move.id_game},
+       
+    }).then((currGame: any) => {
+        if(currGame.turn === currGame.playerOne ){
+            GameClass.Game.update({"turn": currGame.playerTwo}, {
+                where:
+                    {id_game : move.id_game}
+            });
+            
+        }
+        else{
+            GameClass.Game.update({"turn": currGame.playerOne}, {
+                where:
+                    {id_game : move.id_game}
+            });
+           
+        }
+    })
+    
+    
+});
 
 /*
 Restituisce tutte le mosse fatte in una certa partita passando come parametro il suo id 
