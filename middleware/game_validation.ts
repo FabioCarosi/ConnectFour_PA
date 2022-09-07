@@ -29,3 +29,5 @@ export async function checkPlayerExistence(req: any, res: any, next: any){
 
     )
 }
+
+//restituisce errore se lo stato della partita è gameOver

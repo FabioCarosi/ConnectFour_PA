@@ -26,39 +26,21 @@ export const User = connection.define("user", {
 
 //funzione asincrona che aggiorna il credito dell'utente
 
-//funzione che trova il playerTwo del game
+//funzione che trova il playerOne del game
 export async function findPlayerOneByGame(idGame) {
+  const game: any = await GameClass.Game.findOne({
+    where: { id_game: idGame },
+    raw: true,
+  });
+  const user: string = game.playerOne;
+  return user;
+}
 
-    let game: any = await GameClass.Game.findOne({
-  
-      where: { id_game: idGame },
-  
-      raw: true,
-  
-    });
-  
-    let user = game.playerOne;
-  
-    return user;
-  
-  }
-  
-  
-  
-  export async function findPlayerTwoByGame(idGame) {
-  
-    let game = await GameClass.Game.findOne({
-  
-      where: { id_game: idGame },
-  
-      raw: true,
-  
-    })
-    /*const user = gameFound.playerTwo;
-    console.log("Chiamata nella funzione: ",user);
-    console.log(typeof(user));*/
-    return game;
-    }
-
-  
-  
+export async function findPlayerTwoByGame(idGame) {
+  const game: any = await GameClass.Game.findOne({
+    where: { id_game: idGame },
+    raw: true,
+  });
+  const user: string = game.playerTwo;
+  return user;
+}

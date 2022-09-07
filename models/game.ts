@@ -1,6 +1,6 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
 import { Singleton } from "./singletonDB";
-import { User } from "./user"
+import * as UserClass from "./user";
  
 const connection: Sequelize = Singleton.getInstance();
 
@@ -61,8 +61,15 @@ Game.addHook('afterCreate', async (game: any, options) => {
     await game.update({"status": "In progress", "turn": game.playerOne});
 });
 
-
-
+/*export async function getGame(idGame) {
+    const game = await Game.findByPk(idGame);
+    if (game === null) {
+      console.log("Game not found!");
+    } else {
+      return game;
+    }
+  }
+*/
 export async function getDifficulty(idGame: any){
     const difficulty = await Game.findOne({
   
@@ -75,3 +82,42 @@ export async function getDifficulty(idGame: any){
     return difficulty;
 }
 
+export async function updateGameOver(idGame) {
+    await Game.update(
+      { status: "Game Over" },
+      {
+        where: {
+          id_game: idGame,
+        },
+      }
+    );
+  }
+
+  export async function updateWinner(idGame, winner) {
+    let email: string = "";
+    if (winner == 1) {
+      UserClass.findPlayerOneByGame(idGame).then((player: string) => {
+        email = player;
+        Game.update(
+          { winner: email },
+          {
+            where: {
+              id_game: idGame,
+            },
+          }
+        );
+      });
+    } else if (winner == 2) {
+      UserClass.findPlayerTwoByGame(idGame).then((player: string) => {
+        email = player;
+        Game.update(
+          { winner: email },
+          {
+            where: {
+              id_game: idGame,
+            },
+          }
+        );
+      });
+    }
+  }

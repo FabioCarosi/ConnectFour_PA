@@ -93,6 +93,13 @@ export async function makeMove(req:any,res:any){
               else{
                 console.log("parte l'else"); 
               }
+              if (newGame.gameStatus().gameOver) {
+                GameClass.updateGameOver(req.body.id_game);
+                GameClass.updateWinner(
+                  req.body.id_game,
+                  newGame.gameStatus().winner
+                );
+              }
 
              
             });
