@@ -58,10 +58,13 @@ update game status in "In progress" when a new game is created
 When playerOne creates the game, it is playerOne's turn
 */
 Game.addHook('afterCreate', async (game: any, options) => {
-    await game.update({"status": "In progress", "turn": game.playerOne});
+    await game.update({"status": "In progress", 
+                        "turn": game.playerOne});
 });
 
-/*export async function getGame(idGame) {
+
+
+export async function getGame(idGame) {
     const game = await Game.findByPk(idGame);
     if (game === null) {
       console.log("Game not found!");
@@ -69,7 +72,7 @@ Game.addHook('afterCreate', async (game: any, options) => {
       return game;
     }
   }
-*/
+
 export async function getDifficulty(idGame: any){
     const difficulty = await Game.findOne({
   

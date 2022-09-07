@@ -44,3 +44,14 @@ export async function findPlayerTwoByGame(idGame) {
   const user: string = game.playerTwo;
   return user;
 }
+
+//funzione che restituisce il credito dell'utente
+export async function getCredit(emailUser){
+  const user: any = await User.findOne({
+    where: {email: emailUser},
+    attributes: ['credit'],
+    raw: true
+  });
+  const credit: number = user.credit;
+  return credit;
+}

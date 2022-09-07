@@ -91,7 +91,7 @@ export async function checkExistingGame(req: any, res: any, next: any){
     });
 }
 
-//funzione per verificzare se l'utente che crea la partita esiste nel db
+//funzione per verificarre se l'utente nel playload esiste nel db
 
 export async function checkUserExistence(req: any, res: any, next: any){
     const userReq = req.user.email;

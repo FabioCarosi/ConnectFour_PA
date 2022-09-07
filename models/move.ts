@@ -14,6 +14,10 @@ export const Move = connection.define("move", {
         type: DataTypes.BIGINT,
         allowNull: false
     },
+    email: {
+        type: DataTypes.STRING(),
+        allowNull: false
+    },
     column_move: {
         type: DataTypes.TINYINT(),
         allowNull: false

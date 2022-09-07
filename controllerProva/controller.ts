@@ -15,13 +15,19 @@ export async function startGame(req: any, res:any): Promise<void> {
   console.log("Now");
   let newGame;
   req.body.playerOne = req.user.email;
-    //la richiesta contiene l'email dell'user richiedente e l'email dell'user destinatario
+  let newCredit: number;
+  
     try{
     await GameClass.Game.create(req.body).then((game:any) =>{
       console.log("Game has started");
 
       if(game.playerTwo === 'ai'){
         newGame = new Connect4AI();
+        /*UserClass.getCredit(req.user.email).then( (credit: number) => {
+          newCredit = credit - 0.35;
+          UserClass.User.update({ "credit": newCredit }, where: {})
+        })*/
+        
       }
       else{
         newGame = new Connect4();
@@ -40,6 +46,7 @@ export async function startGame(req: any, res:any): Promise<void> {
 
 
 export async function makeMove(req:any,res:any){
+    req.body.email = req.user.email;
     //create move on database
     try{
       await MoveClass.Move.create(req.body).then((move: any) => {
@@ -52,9 +59,9 @@ export async function makeMove(req:any,res:any){
             console.log("Set of all moves: ", moveArr); //array of moves (columns) in the game
 
             //find playerTwo in the game to select IA or UserVSUser mode
-            UserClass.findPlayerTwoByGame(move.id_game).then((gameFound: any) => {
+            UserClass.findPlayerTwoByGame(move.id_game).then((playerTwo: any) => {
 
-              console.log("You are playing against: ", gameFound.playerTwo); //email of the second user
+              console.log("You are playing against: ", playerTwo); //email of the second user
 
               let newGame = new Connect4AI(); 
 
@@ -64,7 +71,7 @@ export async function makeMove(req:any,res:any){
               console.log(newGame.gameStatus());
               
               //select UserVSUser or AI mode
-              if(gameFound.playerTwo === "ai"){
+              if(playerTwo === "ai"){
                 console.log("parte l'if");
                   //get difficulty inserted by user
                   GameClass.getDifficulty(move.id_game).then((diff: any) => {
@@ -80,7 +87,7 @@ export async function makeMove(req:any,res:any){
                    if(!newGame.gameStatus().gameOver) {
                     MoveClass.Move.create( {
                     "id_game": req.body.id_game,
-                    "email_user": "ai",
+                    "email": "ai",
                     "column_move": play
                   });
                 }
