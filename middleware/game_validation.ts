@@ -53,3 +53,5 @@ export async function isGameOver(req: any, res: any, next: any){
         }
     })
 }
+
+//funzione che verifica l'ammissibilità della mossa (non deve superare la griglia del gioco)

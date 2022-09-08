@@ -1,7 +1,8 @@
 const { Connect4AI } = require('../node_modules/connect4-ai/index');
 const { Connect4 } = require('../node_modules/connect4-ai/index');
 const {seq} = require ('sequelize');
-import * as HvsH from 'connect4-ai/human-vs-human';
+
+
 import * as GameClass from '../models/game';
 import * as MoveClass from '../models/move';
 import * as UserClass from '../models/user';
@@ -15,31 +16,36 @@ export async function startGame(req: any, res:any): Promise<void> {
   console.log("Now");
   let newGame;
   req.body.playerOne = req.user.email;
-  let newCredit: number;
+  let lessCredit = 0.35;
+  
   
     try{
     await GameClass.Game.create(req.body).then((game:any) =>{
       console.log("Game has started");
+      //aggiorna credito playerOne
+      UserClass.updateCredit(req.user.email, lessCredit);
+    
 
       if(game.playerTwo === 'ai'){
-        newGame = new Connect4AI();
-        /*UserClass.getCredit(req.user.email).then( (credit: number) => {
-          newCredit = credit - 0.35;
-          UserClass.User.update({ "credit": newCredit }, where: {})
-        })*/
-        
+        newGame = new Connect4AI();    
       }
       else{
         newGame = new Connect4();
+        //aggiorna credito playerTwo
+        UserClass.updateCredit(req.body.playerTwo, lessCredit);
+        
       }
       console.log(newGame.ascii());
       res.send({"Turn": game.turn});
 
     });
+  
     }
     catch(err){
       res.send("An error has occurred ...");
     }
+
+   
 
       
   };
@@ -97,9 +103,7 @@ export async function makeMove(req:any,res:any){
                 
 
               }
-              else{
-                console.log("parte l'else"); 
-              }
+              
               if (newGame.gameStatus().gameOver) {
                 GameClass.updateGameOver(req.body.id_game);
                 GameClass.updateWinner(

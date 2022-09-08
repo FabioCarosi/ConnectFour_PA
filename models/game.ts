@@ -63,7 +63,6 @@ Game.addHook('afterCreate', async (game: any, options) => {
 });
 
 
-
 export async function getGame(idGame) {
     const game = await Game.findByPk(idGame);
     if (game === null) {

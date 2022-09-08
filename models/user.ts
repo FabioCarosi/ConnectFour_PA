@@ -10,7 +10,7 @@ export const User = connection.define("user", {
     primaryKey: true
     },
     credit:{
-        type: DataTypes.INTEGER,
+        type: DataTypes.DECIMAL(5,2),
         allowNull: false
     },
     role: {
@@ -24,7 +24,7 @@ export const User = connection.define("user", {
 );
 
 
-//funzione asincrona che aggiorna il credito dell'utente
+
 
 //funzione che trova il playerOne del game
 export async function findPlayerOneByGame(idGame) {
@@ -46,7 +46,7 @@ export async function findPlayerTwoByGame(idGame) {
 }
 
 //funzione che restituisce il credito dell'utente
-export async function getCredit(emailUser){
+export async function getCredit(emailUser: string){
   const user: any = await User.findOne({
     where: {email: emailUser},
     attributes: ['credit'],
@@ -54,4 +54,15 @@ export async function getCredit(emailUser){
   });
   const credit: number = user.credit;
   return credit;
+}
+
+//funzione che aggiorna il credito dell'utente quando inizia il gioco 
+export async function updateCredit(emailUser, lessCredit){
+
+    await User.increment(
+      { credit: -lessCredit},
+      {
+        where: {email: emailUser}
+      }
+    );
 }
