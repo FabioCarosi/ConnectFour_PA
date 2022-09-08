@@ -1,30 +1,29 @@
-import { DataTypes, Model, Sequelize } from "sequelize";
-import { Singleton } from "./singletonDB";
+import { DataTypes, Sequelize } from "sequelize";
 import * as GameClass from "./game";
+import { Singleton } from "./singletonDB";
 
 const connection: Sequelize = Singleton.getInstance();
 
-export const User = connection.define("user", {
-    email: { 
-    type: DataTypes.STRING(),
-    primaryKey: true
+export const User = connection.define(
+  "user",
+  {
+    email: {
+      type: DataTypes.STRING(),
+      primaryKey: true,
     },
-    credit:{
-        type: DataTypes.DECIMAL(5,2),
-        allowNull: false
+    credit: {
+      type: DataTypes.DECIMAL(5, 2),
+      allowNull: false,
     },
     role: {
-        type: DataTypes.STRING(),
-        allowNull: false
-    }
+      type: DataTypes.STRING(),
+      allowNull: false,
+    },
   },
-    {
-      timestamps: false
+  {
+    timestamps: false,
   }
 );
-
-
-
 
 //funzione che trova il playerOne del game
 export async function findPlayerOneByGame(idGame) {
@@ -46,23 +45,22 @@ export async function findPlayerTwoByGame(idGame) {
 }
 
 //funzione che restituisce il credito dell'utente
-export async function getCredit(emailUser: string){
+export async function getCredit(emailUser: string) {
   const user: any = await User.findOne({
-    where: {email: emailUser},
-    attributes: ['credit'],
-    raw: true
+    where: { email: emailUser },
+    attributes: ["credit"],
+    raw: true,
   });
   const credit: number = user.credit;
   return credit;
 }
 
-//funzione che aggiorna il credito dell'utente quando inizia il gioco 
-export async function updateCredit(emailUser, lessCredit){
-
-    await User.increment(
-      { credit: -lessCredit},
-      {
-        where: {email: emailUser}
-      }
-    );
+//funzione che aggiorna il credito dell'utente quando inizia il gioco
+export async function updateCredit(emailUser, lessCredit) {
+  await User.increment(
+    { credit: -lessCredit },
+    {
+      where: { email: emailUser },
+    }
+  );
 }

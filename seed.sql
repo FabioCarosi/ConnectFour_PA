@@ -21,6 +21,7 @@ CREATE TABLE game (
   winner varchar(50) DEFAULT NULL,
   turn varchar(50) NOT NULL DEFAULT 'current player',
   difficulty varchar(10) DEFAULT 'medium',
+  leaveState varchar(50) DEFAULT 'InProgress',
   PRIMARY KEY (id_game)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -34,8 +35,6 @@ CREATE TABLE move (
   timestamp_move timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (id_move)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
 
 
 INSERT INTO user (email, credit, role) VALUES
