@@ -37,8 +37,6 @@ CREATE TABLE move (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
-
-
 INSERT INTO user (email, credit, role) VALUES
 ('admin@email.com',	100,	'admin'),
 ('ai',	100,	'ai'),
