@@ -180,7 +180,7 @@ export async function leaveMatch(req: any, res: any) {
               },
             }
           );
-          res.send("Tie request saved");
+          res.send("Draw request saved");
         } else if (req.user.email == user2 && leaveState !== user1) {
           console.log("terzo if");
           console.log(req.user.email);

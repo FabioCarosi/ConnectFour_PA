@@ -28,3 +28,4 @@ export const moveValidation = [
 ];
 
 export const leaveValidation = [Jwt.checkLeaveGame];
+export const timeValidation = [game.checkGameExistence];

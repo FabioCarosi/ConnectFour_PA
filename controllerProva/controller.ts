@@ -28,7 +28,8 @@ export async function startGame(req: any, res: any): Promise<void> {
         UserClass.updateCredit(req.body.playerTwo, lessCredit);
       }
       console.log(newGame.ascii());
-      res.send({ Turn: game.turn });
+      console.log({ Turn: game.turn });
+      res.send(newGame.ascii());
     });
   } catch (err) {
     res.send("An error has occurred ...");
@@ -37,6 +38,7 @@ export async function startGame(req: any, res: any): Promise<void> {
 
 export async function makeMove(req: any, res: any) {
   req.body.email = req.user.email;
+
   //create move on database
   try {
     await MoveClass.Move.create(req.body).then((move: any) => {
@@ -91,6 +93,7 @@ export async function makeMove(req: any, res: any) {
                 newGame.gameStatus().winner
               );
             }
+            res.send(newGame.ascii());
           });
         }
       );
@@ -103,4 +106,14 @@ export async function makeMove(req: any, res: any) {
 
 export async function leaveGame(req: any, res: any) {
   GameClass.leaveMatch(req, res);
+}
+
+export async function getTime(req: any, res: any) {
+  MoveClass.getTimeByGame(req.body.id_game).then((lastMove: any) => {
+    const time = lastMove.timestamp_move;
+    console.log("Controller: ");
+    console.log(lastMove);
+    console.log(typeof lastMove);
+    res.send(time);
+  });
 }

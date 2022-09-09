@@ -42,4 +42,8 @@ app.post("/leaveGame", chain.leaveValidation, (req, res) => {
   controller.leaveGame(req, res);
 });
 
+app.post("/time", chain.timeValidation, (req, res) => {
+  controller.getTime(req, res);
+});
+
 app.listen(PORT, HOST);
