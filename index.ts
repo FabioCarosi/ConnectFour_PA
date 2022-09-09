@@ -55,4 +55,8 @@ app.post("/stateGame", chain.stateValidation, (req, res) => {
   controller.stateGame(req, res);
 });
 
+app.post("/time", chain.stateValidation, (req, res) => {
+  controller.dateLastMove(req, res);
+});
+
 app.listen(PORT, HOST);

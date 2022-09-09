@@ -40,6 +40,13 @@ CREATE TABLE move (
 INSERT INTO user (email, credit, role) VALUES
 ('admin@email.com',	100,	'admin'),
 ('ai',	100,	'ai'),
-('player1@email.com',	100,	'player'),
-('player2@email.com',	100,	'player'),
-('player3@email.com', 100, 'player');
+('player1@email.com',	100, 'player'),
+('player2@email.com',	100, 'player'),
+('player3@email.com', 100, 'player'),
+('player4@email.com', 100, 'player'),
+('fabio@email.com', 100, 'admin'),
+('cristina@email.com', 100, 'admin'),
+('adriano@email.com', 100, 'admin'),
+('luca@email.com', 100, 'admin');
+
+

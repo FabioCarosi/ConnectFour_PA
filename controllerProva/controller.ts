@@ -25,8 +25,7 @@ export async function startGame(req: any, res: any): Promise<void> {
       } else {
         newGame = new Connect4();
       }
-      console.log(newGame.ascii());
-      res.send({ Turn: game.turn });
+      res.send(newGame.ascii());
     });
   } catch (err) {
     res.send("An error has occurred ...");
@@ -81,7 +80,7 @@ export async function makeMove(req: any, res: any) {
                 }
               });
             }
-
+            res.send(newGame.ascii());
             if (newGame.gameStatus().gameOver) {
               GameClass.updateGameOver(req.body.id_game);
               GameClass.updateWinner(
@@ -202,4 +201,8 @@ export async function stateGame(req: any, res: any) {
       );
     });
   });
+}
+
+export async function dateLastMove(req: any, res: any) {
+  MoveClass.getTimeByGame(req.body.id_game, res);
 }

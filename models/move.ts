@@ -1,4 +1,4 @@
-import { DataTypes, Sequelize } from "sequelize";
+import { DataTypes, Op, Sequelize } from "sequelize";
 import * as GameClass from "./game";
 import { Singleton } from "./singletonDB";
 import * as UserClass from "./user";
@@ -59,7 +59,6 @@ Move.addHook("afterCreate", async (move: any, options) => {
           where: { id_game: move.id_game },
         }
       );
-      
     }
   });
 });
@@ -77,12 +76,34 @@ export async function findMovesbyGame(idGame: any) {
   return allMoves;
 }
 
-export async function getTimeByGame(idGame: any) {
-  const lastMove = await Move.findOne({
+export async function getTimeByGame(idGame: any, res: any) {
+  /* const lastMove = await Move.findOne({
     where: { id_game: idGame },
     order: [["timestamp_move", "DESC"]],
     raw: true,
   });
   console.log(lastMove);
-  return lastMove;
+  return lastMove;*/
+  let dt = new Date();
+  let err;
+  dt.setHours(dt.getHours() - 3);
+  console.log(dt);
+
+  Move.findAll({
+    where: {
+      id_game: idGame,
+      timestamp_move: {
+        [Op.gt]: dt,
+      },
+    },
+  }).then((latestMoves: any) => {
+    if (latestMoves.length === 0) {
+      GameClass.updateGameOver(idGame);
+      err = "Game Over";
+    } else {
+      err = "BASTA";
+    }
+    res.send(dt + " " + err);
+    return latestMoves;
+  });
 }
