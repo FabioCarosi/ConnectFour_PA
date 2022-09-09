@@ -26,4 +26,9 @@ export const moveValidation = [
     game.isGameOver,
     Jwt.isYourCurrentTurn
 ]
-export const leaveValidation = [Jwt.checkLeaveGame];
+export const leaveValidation = [
+    Jwt.checkUserExistence,
+    game.checkGameExistence,
+    Jwt.checkAuthMove,
+    game.isGameOver
+];
