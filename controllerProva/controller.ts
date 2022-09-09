@@ -31,8 +31,6 @@ export async function startGame(req: any, res:any): Promise<void> {
       }
       else{
         newGame = new Connect4();
-        //aggiorna credito playerTwo
-        UserClass.updateCredit(req.body.playerTwo, lessCredit);
         
       }
       console.log(newGame.ascii());

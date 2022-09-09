@@ -1,6 +1,7 @@
 import * as Jwt from './Jwt';
 import * as game from './game_validation';
 import * as body from './body_validation';
+//import * as view from './view_validation';
 
 export const JwtValidation = [
     Jwt.requestTime,
@@ -31,4 +32,9 @@ export const leaveValidation = [
     game.checkGameExistence,
     Jwt.checkAuthMove,
     game.isGameOver
+];
+
+export const viewValidation = [
+    Jwt.checkUserExistence,
+    //view.checkGetFormat
 ];

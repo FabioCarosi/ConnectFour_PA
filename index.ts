@@ -44,13 +44,17 @@ app.post('/makeMove', chain.moveValidation, (req, res) => {
 })
 
 //Questa rotta permette di visualizzare le partite svolte da un dato utente
-app.get('/viewGamesByUser', (req, res) => {
+app.get('/viewGamesByUser', chain.viewValidation, (req, res) => {
     controller.viewGamesByUser(req, res);
 })
 
 app.post("/leaveGame", chain.leaveValidation, (req, res) => {
     controller.leaveGame(req, res);
   });
+
+//rotta per l’utente con ruolo admin che consenta di effettuare la ricarica per un utente 
+//fornendo la mail ed il nuovo “credito” (sempre mediante JWT). I token JWT devono contenere i dati essenziali.
+//app.get('/chargeCredit',);
   
 
 app.listen(PORT,HOST);

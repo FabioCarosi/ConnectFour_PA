@@ -59,7 +59,7 @@ Move.addHook("afterCreate", async (move: any, options) => {
           where: { id_game: move.id_game },
         }
       );
-      UserClass.updateCredit(currGame.playerTwo, 0.01);
+      
     }
   });
 });
