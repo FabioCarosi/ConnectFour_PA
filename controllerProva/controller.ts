@@ -2,7 +2,7 @@ const { Connect4AI } = require('../node_modules/connect4-ai/index');
 const { Connect4 } = require('../node_modules/connect4-ai/index');
 const {seq} = require ('sequelize');
 
-
+import { DATE,Op, Sequelize } from "sequelize";
 import * as GameClass from '../models/game';
 import * as MoveClass from '../models/move';
 import * as UserClass from '../models/user';
@@ -133,3 +133,72 @@ export async function makeMove(req:any,res:any){
           
 
 } 
+
+
+export async function viewGamesByUser(req: any, res: any){
+  const userReq = req.user.email;
+  let totalGames: any = [];
+
+  if(req.query.take === "between"){
+    //localhost:8080/viewGamesByUser?take=between&dateOne=2020-09-08&dateTwo=2022-09-10
+    totalGames = await GameClass.getGameByDateBetween(userReq, req.query.dateOne, req.query.dateTwo);
+  }
+  else if(req.query.take === "greaterThan"){
+    //localhost:8080/viewGamesByUser?take=greaterThan&date=2020-09-08
+    console.log(req.query.date)
+    totalGames = await GameClass.getGameByDateGraterThan(userReq, req.query.date);
+  }
+  else if(req.query.take === "lessThan"){
+    //localhost:8080/viewGamesByUser?take=lessThan&date=2020-09-08
+    totalGames = await GameClass.getGameByDateLessThan(userReq, req.query.date);
+  }
+  //totalGames diventa il vettore di tutte le partite svolte dall'userReq
+  let gamesFiltered: any = []; //vettore con le partite presentate con gli attributi che vogliamo visualizzare
+
+  for(const el of totalGames) {                //per ogni partita dell'utente, vedi il vincitore, la modalità, il numero di mosse e la data di avvio
+    //vedi se l'utente ha vinto la partita
+    let hasWon: string;
+    if(el.winner === userReq){
+      hasWon = "Yes";
+    }
+    else {
+      if(el.winner === "Draw"){
+        hasWon = "Draw";
+      }
+      else{
+        hasWon = "No";
+      }
+    }
+
+    //vedi la modalità di gioco
+    let gameModality: string;
+    if(el.playerTwo === "ai"){
+      gameModality = "Versus AI"
+    }
+    else{
+      gameModality = "User VS User"
+    }
+    
+    //conta il numero di mosse
+    const numMoves = await MoveClass.findMovesbyGame(el.id_game).then( (allMoves: any) => {
+      return allMoves.length;
+    })
+    
+  
+    const body = {
+      id_game: el.id_game,
+      won: hasWon,
+      modality: gameModality,
+      numberOfMoves: numMoves,
+      date: el.startTime
+    }
+    gamesFiltered.push(body);
+  }
+
+  res.send(gamesFiltered);
+  
+}
+
+export async function leaveGame(req: any, res: any) {
+  GameClass.leaveMatch(req, res);
+}

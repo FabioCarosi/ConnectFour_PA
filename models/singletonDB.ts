@@ -12,6 +12,7 @@ export class Singleton {
             host: process.env.MYSQL_HOST,
             port: Number(process.env.MYSQL_PORT),
             dialect: 'mysql',
+            
             define: {
                 freezeTableName: true
             }

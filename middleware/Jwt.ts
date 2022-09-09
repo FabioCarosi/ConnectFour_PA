@@ -172,3 +172,29 @@ export async function checkAuthMove(req: any, res: any, next:any){
     })
 }
 
+export async function checkLeaveGame(req: any, res: any, next: any) {
+    const userReq = req.user.email;
+  
+    await GameClass.Game.findOne({
+      where: { id_game: req.body.id_game },
+    }).then((gameActive: any) => {
+      if (gameActive == null) {
+        console.log("Game n. " + req.body.id_game + " does not exist");
+        res.send("Game n. " + req.body.id_game + " does not exist");
+      } else {
+        if (gameActive.status == "Game Over") {
+          res.send("Game n. " + req.body.id_game + "is over!");
+        } else if (
+          gameActive.playerOne == userReq ||
+          gameActive.playerTwo == userReq
+        ) {
+          console.log("Giocatore presente");
+          next();
+        } else {
+          console.log("You are not a player of match n. " + req.body.id_game);
+          res.send("You are not a player of match n. " + req.body.id_game);
+        }
+      }
+    });
+  }
+

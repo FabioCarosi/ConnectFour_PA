@@ -21,6 +21,7 @@ CREATE TABLE game (
   winner varchar(50) DEFAULT NULL,
   turn varchar(50) NOT NULL DEFAULT 'current player',
   difficulty varchar(10) DEFAULT 'medium',
+  leaveState varchar(50) DEFAULT 'InProgress',
   PRIMARY KEY (id_game)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

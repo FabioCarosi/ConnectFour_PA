@@ -43,4 +43,14 @@ app.post('/makeMove', chain.moveValidation, (req, res) => {
     controller.makeMove(req, res);
 })
 
+//Questa rotta permette di visualizzare le partite svolte da un dato utente
+app.get('/viewGamesByUser', (req, res) => {
+    controller.viewGamesByUser(req, res);
+})
+
+app.post("/leaveGame", chain.leaveValidation, (req, res) => {
+    controller.leaveGame(req, res);
+  });
+  
+
 app.listen(PORT,HOST);
