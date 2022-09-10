@@ -2,6 +2,7 @@ const { Connect4AI } = require("../node_modules/connect4-ai/index");
 const { Connect4 } = require("../node_modules/connect4-ai/index");
 const { seq } = require("sequelize");
 
+import * as fs from "fs";
 import * as GameClass from "../models/game";
 import * as MoveClass from "../models/move";
 import * as UserClass from "../models/user";
@@ -214,22 +215,64 @@ export async function chargeCredit(req: any, res: any) {
   res.send("Credit has been updated");
 }
 
+/*
 export async function getMovesList(req: any, res: any) {
   let list: string = "All Moves of match: " + req.body.id_game;
+  let cont: number = 0;
+  let stringMoves;
+  let jsonMoves;
   MoveClass.findMovesbyGame(req.body.id_game).then((moves: any) => {
-    moves.forEach((move) => {
-      let stringMove =
-        "\n Player: " +
+    stringMoves = moves.map((move) => JSON.stringify(move));
+    jsonMoves = stringMoves.map((string) => JSON.parse(string));
+    // moves.forEach((move) => {
+    //  cont = cont + 1;
+    //  let stringMove =
+    //    "\n" +
+    //    cont +
+     //   ")" +
+    //    "Player: " +
+    //    move.email +
+    //    " -- Move: " +
+     //   move.column_move +
+     //   " -- Time: " +
+    //    move.timestamp_move;
+   //   list = list + stringMove;
+  //  });
+    fs.promises.writeFile("moves.txt", jsonMoves, function (err) {
+      if (err) {
+        console.log(err);
+      }
+    });
+    console.log("List: " + list);
+    res.send(jsonMoves);
+  });
+  console.log("List: " + jsonMoves);
+}
+*/
+
+export async function getMovesList(req: any, res: any) {
+  let stringMove;
+  let cont = 0;
+  let list: string = "All Moves of match: " + req.body.id_game;
+
+  MoveClass.findMovesbyGame(req.body.id_game).then((moves) => {
+    moves.forEach((move: any) => {
+      stringMove = JSON.stringify(move);
+      fs.writeFileSync("moves.txt", stringMove);
+      fs.writeFileSync("moves.json", stringMove);
+      cont = cont + 1;
+      let out =
+        "\n" +
+        cont +
+        ")" +
+        "Player: " +
         move.email +
         " -- Move: " +
         move.column_move +
         " -- Time: " +
         move.timestamp_move;
-      console.log(stringMove);
-      list.concat(stringMove.toString());
-      console.log(list);
+      list = list + out;
     });
+    res.send(list);
   });
-  console.log(list);
-  res.send(list);
 }
