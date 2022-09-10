@@ -207,10 +207,29 @@ export async function dateLastMove(req: any, res: any) {
   MoveClass.getTimeByGame(req.body.id_game, res);
 }
 
-
-export async function chargeCredit(req: any, res: any){
+export async function chargeCredit(req: any, res: any) {
   const newCredit = req.body.newCredit;
   const emailUser = req.body.email;
   await UserClass.updateCredit(emailUser, -newCredit);
   res.send("Credit has been updated");
+}
+
+export async function getMovesList(req: any, res: any) {
+  let list: string = "All Moves of match: " + req.body.id_game;
+  MoveClass.findMovesbyGame(req.body.id_game).then((moves: any) => {
+    moves.forEach((move) => {
+      let stringMove =
+        "\n Player: " +
+        move.email +
+        " -- Move: " +
+        move.column_move +
+        " -- Time: " +
+        move.timestamp_move;
+      console.log(stringMove);
+      list.concat(stringMove.toString());
+      console.log(list);
+    });
+  });
+  console.log(list);
+  res.send(list);
 }

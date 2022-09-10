@@ -39,14 +39,13 @@ export const viewValidation = [
   //view.checkGetFormat
 ];
 
-export const stateValidation = [
-    Jwt.checkAuthMove,
-    game.checkGameExistence
-];
+export const stateValidation = [Jwt.checkAuthMove, game.checkGameExistence];
 
 export const chargeValidation = [
-    Jwt.checkUserExistence,
-    Jwt.authAdmin,
-    game.adapterCheckPlayerTwo,
-    game.checkPlayerTwoExistence
+  Jwt.checkUserExistence,
+  Jwt.authAdmin,
+  game.adapterCheckPlayerTwo,
+  game.checkPlayerTwoExistence,
 ];
+
+export const listValidation = [Jwt.checkUserExistence, game.checkGameExistence];
