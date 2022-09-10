@@ -135,23 +135,20 @@ export async function verifyUserTwo(req: any, res: any, next: any){
     }
 }
 
-//funzione per verificare il credito sufficiente degli utenti
+//funzione per verificare il credito sufficiente dell'utente che invia la richiesta di gioco
 export async function checkUserCredit(req: any, res: any, next: any){
     const userReq = req.user.email;
-    const secondUser = req.body.playerTwo;
+    
     const userReqCredit = await UserClass.getCredit(userReq);
-    const secondUserCredit = await UserClass.getCredit(secondUser);
+    
     if(userReqCredit < 0.35){
         res.send("You have no enough credit");
     }
+    
     else{
-        if(secondUserCredit < 0.35){
-            res.send("The other player has no enough credit");
-        }
-        else{
-            next();
-        }
+        next();
     }
+    
 }
 
 //funzione per verificare se l'utente che manda la mossa è quello specificato in game.turn
