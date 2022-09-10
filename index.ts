@@ -38,10 +38,7 @@ app.post("/makeMove", chain.moveValidation, (req, res) => {
   controller.makeMove(req, res);
 });
 
-//Questa rotta permette di visualizzare le partite svolte da un dato utente
-app.get("/viewGamesByUser", chain.viewValidation, (req, res) => {
-  controller.viewGamesByUser(req, res);
-});
+
 
 app.post("/leaveGame", chain.leaveValidation, (req, res) => {
   controller.leaveGame(req, res);
@@ -57,6 +54,16 @@ app.post("/stateGame", chain.stateValidation, (req, res) => {
 
 app.post("/time", chain.stateValidation, (req, res) => {
   controller.dateLastMove(req, res);
+});
+
+//Questa rotta permette all'admin di aggiornare il credito di un utente 
+app.post("/chargeCredit", chain.chargeValidation, (req, res) => {
+  controller.chargeCredit(req, res);
+})
+
+//Questa rotta permette di visualizzare le partite svolte da un dato utente
+app.get("/viewGamesByUser", chain.viewValidation, (req, res) => {
+  controller.viewGamesByUser(req, res);
 });
 
 app.listen(PORT, HOST);

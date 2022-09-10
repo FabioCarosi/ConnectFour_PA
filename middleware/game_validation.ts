@@ -14,9 +14,10 @@ export async function checkGameExistence(req: any, res: any, next: any) {
   });
 }
 
-//funzione che verifica l'esistenza del playerTwo nel payload dell'invio della richiesta di una nuova partita
+//funzione che verifica l'esistenza del secondo utente nel payload dell'invio della richiesta di una nuova partita
 export async function checkPlayerTwoExistence(req: any, res: any, next: any) {
   const userTwo = req.body.playerTwo;
+
   await UserClass.User.findOne({
     where: { email: userTwo },
   }).then((user: any) => {
@@ -26,6 +27,11 @@ export async function checkPlayerTwoExistence(req: any, res: any, next: any) {
       res.send("Second player doesn't exist");
     }
   });
+}
+
+export async function adapterCheckPlayerTwo(req: any, res: any, next: any){
+  req.body.playerTwo = req.body.email;
+  next();
 }
 
 //restituisce errore se lo stato della partita è gameOver

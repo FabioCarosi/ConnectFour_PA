@@ -36,11 +36,15 @@ export function verifyAndAuthenticate(req,res,next){
     next();
 }
 
+enum role {
+    Admin = "Admin",
+    Player = "Player"
+}
 //check the right format of payload jwt
 export function checkFormatJwt(req: any, res: any, next: any){
     const userRole = req.user.role;
     const userEmail = req.user.email;
-    const isRight: boolean = ((userRole === "Player" || userRole === "Admin")
+    const isRight: boolean = ((userRole === role.Admin || userRole === role.Player)
                             && (typeof(userEmail) === "string")
                             && (typeof(userRole) === "string")
                             && (userEmail !== "ai"));
@@ -49,6 +53,17 @@ export function checkFormatJwt(req: any, res: any, next: any){
     }
     else{
         res.send("Your payload has bad format");
+    }
+}
+
+//verifica che il ruolo sia Admin
+export async function authAdmin(req: any, res: any, next: any){
+    const myRole = req.user.role;
+    if(myRole === role.Admin){
+        next();
+    }
+    else{
+        res.send("You are not authorized");
     }
 }
 
