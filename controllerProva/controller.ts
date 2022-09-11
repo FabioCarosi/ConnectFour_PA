@@ -7,25 +7,33 @@ import * as MoveClass from "../models/move";
 import * as UserClass from "../models/user";
 import { controllerErrorHandler } from "./controllerErrorHandler";
 
-//rotta per creare una partita
 
+/*Function startGame allows to create a new Game 
+  In request's body the user sends the email of the opponent player
+  If errors don't occurr, then an item Game is created in DB with all necessary informations
+*/
 export async function startGame(req: any, res: any): Promise<void> {
  
-  let newGame;
-  req.body.playerOne = req.user.email;
-  let lessCredit = 0.35;
-
   try {
+    let newGame;
+    req.body.playerOne = req.user.email; //playerOne in body's request is instantiated with the user's email in JWT payload
+    let lessCredit = 0.35; //amount of credity that will be decreased to playerOne
+    /*
+    Here, a new Game istance is created in DB
+    */
     await GameClass.Game.create(req.body).then((game: any) => {
-      console.log("Game has started");
-      //aggiorna credito playerOne
+      console.log("Game has started"); //successFactory
+      //update PlayerOne's credit
       UserClass.updateCredit(req.user.email, lessCredit);
+      //successFactory --> credit has been successfully updated
 
       if (game.playerTwo === "ai") {
-        newGame = new Connect4AI();
+        newGame = new Connect4AI(); //create a game instance where the opponent is the AI
       } else {
-        newGame = new Connect4();
+        newGame = new Connect4(); //create a game instance with modality "UserVSUser"
       }
+      console.log("You are playing against ",game.playerTwo);
+      //res.status(successMsg.msgStatus);
       res.send(newGame.ascii());
     });
   } catch (err) {
@@ -33,28 +41,39 @@ export async function startGame(req: any, res: any): Promise<void> {
   }
 }
 
+/*
+  Function makeMove allows the user to make a move
+  In request's body the user sends the id of game in which he's currently playing
+  If errors don't occurr, then an item Move is created in DB with all necessary informations
+*/
 export async function makeMove(req: any, res: any) {
   
   try {
-    req.body.email = req.user.email;
-    //create move on database
+    req.body.email = req.user.email; //email in body's request is instantiated with the user's email in JWT payload
+    /*
+    Here, a new Move istance is created in DB
+    */
     await MoveClass.Move.create(req.body).then((move: any) => {
-      const moveArr: number[] = [];
+      
+      const moveArr: number[] = []; //array where moves found in DB will be pushed
 
-      //find all moves corrisponding to id_game of current game
+      /*
+        Find all moves corrisponding to id_game of current game
+      */
       const allMoves = MoveClass.findMovesbyGame(move.id_game).then(
         (movesByGame: any) => {
-          movesByGame.forEach((el) => moveArr.push(el.column_move));
-          console.log("Set of all moves: ", moveArr); //array of moves (columns) in the game
 
-          //find playerTwo in the game to select IA or UserVSUser mode
+          movesByGame.forEach((el) => moveArr.push(el.column_move)); //push moves into array
+
+        /*
+          Find playerTwo in the game to select IA or UserVSUser mode
+        */
           UserClass.findPlayerTwoByGame(move.id_game).then((playerTwo: any) => {
-            console.log("You are playing against: ", playerTwo); //email of the second user
-
+            //A new game instance is created by giving it the array of moves instantiated before
             let newGame = new Connect4AI();
 
             moveArr.forEach((el) => {
-              newGame.play(el);
+              newGame.play(el); //play(column) allows to play the column specified in the game
             });
 
             console.log(newGame.ascii());
@@ -62,8 +81,7 @@ export async function makeMove(req: any, res: any) {
 
             //select UserVSUser or AI mode
             if (playerTwo === "ai") {
-              console.log("parte l'if");
-              //get difficulty inserted by user
+              //Get difficulty inserted by user
               GameClass.getDifficulty(move.id_game).then((diff: any) => {
                 console.log("Difficulty of game:", diff.difficulty);
 
@@ -72,7 +90,7 @@ export async function makeMove(req: any, res: any) {
                 console.log(newGame.ascii());
                 console.log(newGame.gameStatus());
 
-                //create AI move in db if game is not over
+                //create AI move in DB if game is not over
                 if (!newGame.gameStatus().gameOver) {
                   MoveClass.Move.create({
                     id_game: req.body.id_game,
@@ -82,7 +100,9 @@ export async function makeMove(req: any, res: any) {
                 }
               });
             }
+          
             res.send(newGame.ascii());
+            //successMessage: a move has been made
             if (newGame.gameStatus().gameOver) {
               GameClass.updateGameOver(req.body.id_game);
               GameClass.updateWinner(
@@ -100,36 +120,41 @@ export async function makeMove(req: any, res: any) {
   
 }
 
+/*
+  Function viewGamesByUser allows to see all games played by an user
+  In the url, the user specifies whether he wants to view games 
+  in a given range, or from a certain date on, or before a certain date.
+  If errors don't occurr, then a JSON with all informations about games is shown in response's body
+*/
 export async function viewGamesByUser(req: any, res: any) {
   try {
       const userReq = req.user.email;
-      let totalGames: any = [];
+      let totalGames: any = []; //array where games found in DB will be pushed
     
-      if (req.query.take === "between") {
+      if (req.query.take === "between") { //user wants a range of dates
         //localhost:8080/viewGamesByUser?take=between&dateOne=2020-09-08&dateTwo=2022-09-10
         totalGames = await GameClass.getGameByDateBetween(
           userReq,
           req.query.dateOne,
           req.query.dateTwo
         );
-      } else if (req.query.take === "greaterThan") {
+      } else if (req.query.take === "greaterThan") { //user wants games from a certain date on 
         //localhost:8080/viewGamesByUser?take=greaterThan&date=2020-09-08
         console.log(req.query.date);
         totalGames = await GameClass.getGameByDateGraterThan(
           userReq,
           req.query.date
         );
-      } else if (req.query.take === "lessThan") {
+      } else if (req.query.take === "lessThan") { //user wants games before a certain date
         //localhost:8080/viewGamesByUser?take=lessThan&date=2020-09-08
         totalGames = await GameClass.getGameByDateLessThan(userReq, req.query.date);
       }
-      //totalGames diventa il vettore di tutte le partite svolte dall'userReq
-      let gamesFiltered: any = []; //vettore con le partite presentate con gli attributi che vogliamo visualizzare
+      //totalGames is now the array with all games played by the user
+      let gamesFiltered: any = []; //array where all necessary informations will be pushed
     
       for (const el of totalGames) {
-        //per ogni partita dell'utente, vedi il vincitore, la modalità, il numero di mosse e la data di avvio
-        //vedi se l'utente ha vinto la partita
-        let hasWon: string;
+        //for every game of the user, take the winner, the modality, the number of moves e the start date
+        let hasWon: string; //see if user has won the game
         if (el.winner === userReq) {
           hasWon = "Yes";
         } else {
@@ -140,7 +165,7 @@ export async function viewGamesByUser(req: any, res: any) {
           }
         }
     
-        //vedi la modalità di gioco
+        //see game's modality
         let gameModality: string;
         if (el.playerTwo === "ai") {
           gameModality = "Versus AI";
@@ -148,7 +173,7 @@ export async function viewGamesByUser(req: any, res: any) {
           gameModality = "User VS User";
         }
     
-        //conta il numero di mosse
+        //count number of moves
         const numMoves = await MoveClass.findMovesbyGame(el.id_game).then(
           (allMoves: any) => {
             return allMoves.length;
@@ -164,8 +189,9 @@ export async function viewGamesByUser(req: any, res: any) {
         };
         gamesFiltered.push(body);
       }
-    
-      res.send(gamesFiltered);
+      
+      res.send(gamesFiltered); //and success message
+      //res.status
   } catch (err) {
       controllerErrorHandler(err, res);
   }

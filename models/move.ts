@@ -51,6 +51,7 @@ Move.addHook("afterCreate", async (move: any, options) => {
           where: { id_game: move.id_game },
         }
       );
+      console.log("Now is turn of: ",currGame.playerTwo);
       UserClass.updateCredit(currGame.playerOne, 0.01);
     } else {
       GameClass.Game.update(
@@ -59,17 +60,18 @@ Move.addHook("afterCreate", async (move: any, options) => {
           where: { id_game: move.id_game },
         }
       );
+      console.log("Now is turn of: ",currGame.playerOne);
     }
   });
 });
 
 /*
-Restituisce tutte le mosse fatte in una certa partita passando come parametro il suo id 
+Finds all moves in a given game
+@param idGame game identifier
 */
 export async function findMovesbyGame(idGame: any) {
   const allMoves = await Move.findAll({
     where: { id_game: idGame },
-    //attributes: ['column_move'],
     raw: true,
   });
 

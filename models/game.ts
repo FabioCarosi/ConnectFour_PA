@@ -58,8 +58,8 @@ Game.belongsTo(User, {foreignKey: "winner",  targetKey: "email"});
 
 
 /*
-update game status in "In progress" when a new game is created
-When playerOne creates the game, it is playerOne's turn
+  update game status in "In progress" when a new game is created
+  When playerOne creates the game, it is playerOne's turn
 */
 Game.addHook('afterCreate', async (game: any, options) => {
     await game.update({"status": "In progress", 
@@ -227,7 +227,7 @@ export async function updateGameOver(idGame) {
                 },
               }
             );
-            res.send("Game Over - Draw");
+            res.send("Game Over - Draw"); //successMsg
           } else if (req.user.email == user1 && leaveState !== user2) {
             console.log("secondo if");
             Game.update(
@@ -238,7 +238,7 @@ export async function updateGameOver(idGame) {
                 },
               }
             );
-            res.send("Draw request saved");
+            res.send("Draw request saved"); //successMsg
           } else if (req.user.email == user2 && leaveState !== user1) {
             console.log("terzo if");
             console.log(req.user.email);
@@ -251,11 +251,11 @@ export async function updateGameOver(idGame) {
                 },
               }
             );
-            res.send("Draw request saved");
+            res.send("Draw request saved"); //successMessage
           } else {
             console.log("else");
             console.log(user1, user2, leaveState, req.user.email);
-            res.send("Problem with draw request");
+            res.send("Problem with draw request"); //error handler --> generic error
           }
         });
       });
