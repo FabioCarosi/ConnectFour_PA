@@ -1,7 +1,8 @@
 import * as body from "./body_validation";
 import * as game from "./game_validation";
 import * as Jwt from "./Jwt";
-//import * as view from './view_validation';
+import * as view from './view_validation';
+import * as validErrHandler from './validationErrorHandler';
 
 export const JwtValidation = [
   Jwt.requestTime,
@@ -9,6 +10,7 @@ export const JwtValidation = [
   Jwt.checkToken,
   Jwt.verifyAndAuthenticate,
   Jwt.checkFormatJwt,
+  validErrHandler.validErrorHandler
 ];
 
 export const gameValidation = [
@@ -18,6 +20,7 @@ export const gameValidation = [
   Jwt.verifyUserTwo,
   Jwt.checkExistingGame,
   Jwt.checkUserCredit,
+  validErrHandler.validErrorHandler
 ];
 export const moveValidation = [
   body.moveBodyValidation,
@@ -26,27 +29,32 @@ export const moveValidation = [
   Jwt.checkAuthMove,
   game.isGameOver,
   Jwt.isYourCurrentTurn,
+  validErrHandler.validErrorHandler
 ];
 export const leaveValidation = [
   Jwt.checkUserExistence,
   game.checkGameExistence,
   Jwt.checkAuthMove,
   game.isGameOver,
+  validErrHandler.validErrorHandler
 ];
 
 export const viewValidation = [
   Jwt.checkUserExistence,
-  //view.checkGetFormat
+  view.checkGetFormat,
+  validErrHandler.validErrorHandler
 ];
 
 export const stateValidation = [
     Jwt.checkAuthMove,
-    game.checkGameExistence
+    game.checkGameExistence,
+    validErrHandler.validErrorHandler
 ];
 
 export const chargeValidation = [
     Jwt.checkUserExistence,
     Jwt.authAdmin,
     game.adapterCheckPlayerTwo,
-    game.checkPlayerTwoExistence
+    game.checkPlayerTwoExistence,
+    validErrHandler.validErrorHandler
 ];

@@ -1,6 +1,7 @@
 var express = require("express");
 import * as controller from "./controllerProva/controller";
 import * as chain from "./middleware/chain";
+import * as validErrorHandler from "./middleware/validationErrorHandler"
 
 const PORT = 8080;
 const HOST = "0.0.0.0";

@@ -1,7 +1,8 @@
 import {ErrEnum, ErrorFactory} from '../Factory/ErrorFactory';
-export function validErrorHandler (error: ErrEnum, req: any, res: any, next: any){
+
+export function controllerErrorHandler (error: ErrEnum, res: any){
     const errFactory: ErrorFactory = new ErrorFactory();
-    const msgError = errFactory.getError(error).getMsg();
+    const msgError = errFactory.getError(ErrEnum.GenericError).getMsg();
     res.status(msgError.msgStatus);
     console.log(msgError);
     res.send(msgError.msgString);
