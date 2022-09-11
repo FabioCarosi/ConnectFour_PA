@@ -233,7 +233,7 @@ export async function chargeCredit(req: any, res: any) {
   await UserClass.updateCredit(emailUser, -newCredit);
   res.send("Credit has been updated");
 }
-
+/*
 export async function getMovesList(req: any, res: any) {
   let list: string = "All Moves of match: " + req.body.id_game;
 
@@ -267,30 +267,45 @@ export async function getMovesList(req: any, res: any) {
 
   fs.writeFileSync(file, fileString, "utf8");
 }
-
-/*export async function getMovesList(req: any, res: any) {
+*/
+export async function getMovesList(req: any, res: any) {
   let stringMove;
   let cont = 0;
-  let list: string = "All Moves of match: " + req.body.id_game;
+  let separator = ",";
+  let list: string = "All Moves of match n. " + req.body.id_game;
 
-  MoveClass.findMovesbyGame(req.body.id_game).then((moves) => {
-    moves.forEach((move: any) => {
-      stringMove = JSON.stringify(move);
-      fs.writeFileSync("moves.txt", stringMove);
-      fs.writeFileSync("moves.json", stringMove);
-      cont = cont + 1;
-      let out =
-        "\n" +
-        cont +
-        ")" +
-        "Player: " +
+  const moves = await MoveClass.findMovesbyGame(req.body.id_game);
+  if (req.body.format === "csv") {
+    const head = "Player" + separator + "Move" + separator + "Time \n";
+    fs.writeFileSync("moves.csv", head);
+  }
+  moves.forEach((move: any) => {
+    if (req.body.format === "json") {
+      stringMove = JSON.stringify(move) + ", \n";
+      fs.appendFileSync("moves.json", stringMove);
+    } else if (req.body.format === "csv") {
+      stringMove =
         move.email +
-        " -- Move: " +
+        separator +
         move.column_move +
-        " -- Time: " +
-        move.timestamp_move;
-      list = list + out;
-    });
-    res.send(list);
+        separator +
+        move.timestamp_move +
+        "\n";
+      fs.appendFileSync("moves.csv", stringMove);
+    }
+
+    fs.appendFileSync("moves.txt", stringMove);
+    cont = cont + 1;
+    let out =
+      "\n" +
+      cont +
+      ")" +
+      move.email +
+      separator +
+      move.column_move +
+      separator +
+      move.timestamp_move;
+    list = list + out;
   });
-}*/
+  res.send(list);
+}
