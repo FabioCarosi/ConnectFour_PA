@@ -51,7 +51,7 @@ app.post("/stateGame", chain.stateValidation, (req, res) => {
 });
 
 app.post("/time", chain.stateValidation, (req, res) => {
-  controller.dateLastMove(req, res);
+  res.send(controller.dateLastMove(req));
 });
 
 //Questa rotta permette all'admin di aggiornare il credito di un utente

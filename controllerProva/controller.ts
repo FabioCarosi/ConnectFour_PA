@@ -37,17 +37,27 @@ export async function makeMove(req: any, res: any) {
   req.body.email = req.user.email;
   //create move on database
   try {
-    await MoveClass.Move.create(req.body).then((move: any) => {
-      const moveArr: number[] = [];
+    const savedMoves = await MoveClass.findMovesbyGame(req.body.id_game); //find all the moves of the game
+    if (savedMoves.length !== 0) {
+      //if there are moves
+      const bool = await MoveClass.checkLastHourMoves(req); //then check if there are moves in the last hour
+      if (bool) {
+        res.send("Game Over: You are out of time!");
+        return;
+      } //if there is not moves in the last hour the player is out of time
+    }
+    const userMove = await MoveClass.Move.create(req.body);
+    const moveArr: number[] = [];
 
-      //find all moves corrisponding to id_game of current game
-      const allMoves = MoveClass.findMovesbyGame(move.id_game).then(
-        (movesByGame: any) => {
-          movesByGame.forEach((el) => moveArr.push(el.column_move));
-          console.log("Set of all moves: ", moveArr); //array of moves (columns) in the game
+    //find all moves corrisponding to id_game of current game
+    await MoveClass.findMovesbyGame(req.body.id_game).then(
+      (movesByGame: any) => {
+        movesByGame.forEach((el) => moveArr.push(el.column_move));
+        console.log("Set of all moves: ", moveArr); //array of moves (columns) in the game
 
-          //find playerTwo in the game to select IA or UserVSUser mode
-          UserClass.findPlayerTwoByGame(move.id_game).then((playerTwo: any) => {
+        //find playerTwo in the game to select IA or UserVSUser mode
+        UserClass.findPlayerTwoByGame(req.body.id_game).then(
+          (playerTwo: any) => {
             console.log("You are playing against: ", playerTwo); //email of the second user
 
             let newGame = new Connect4AI();
@@ -63,7 +73,7 @@ export async function makeMove(req: any, res: any) {
             if (playerTwo === "ai") {
               console.log("parte l'if");
               //get difficulty inserted by user
-              GameClass.getDifficulty(move.id_game).then((diff: any) => {
+              GameClass.getDifficulty(req.body.id_game).then((diff: any) => {
                 console.log("Difficulty of game:", diff.difficulty);
 
                 const play = newGame.playAI(diff.difficulty); //ai plays
@@ -83,16 +93,16 @@ export async function makeMove(req: any, res: any) {
             }
             res.send(newGame.ascii());
             if (newGame.gameStatus().gameOver) {
-              GameClass.updateGameOver(req.body.id_game);
-              GameClass.updateWinner(
+              GameClass.updateGameOver(req.body.id_game, "GameOver");
+              GameClass.updateWinnerByNumber(
                 req.body.id_game,
                 newGame.gameStatus().winner
               );
             }
-          });
-        }
-      );
-    });
+          }
+        );
+      }
+    );
   } catch (err) {
     res.send("An error has occurred...");
   }
@@ -176,36 +186,45 @@ export async function stateGame(req: any, res: any) {
   console.log(typeof req.body.id_game);
 
   //find all moves corrisponding to id_game of current game
-  MoveClass.findMovesbyGame(req.body.id_game).then((movesByGame: any) => {
-    movesByGame.forEach((el) => moveArr.push(el.column_move));
-    console.log("Set of all moves: ", moveArr); //array of moves (columns) in the game
+  const movesByGame: any = await MoveClass.findMovesbyGame(req.body.id_game);
 
-    let newGame = new Connect4AI();
+  if (movesByGame.length !== 0) {
+    //if there are moves
+    const bool = await MoveClass.checkLastHourMoves(req); //then check if there are moves in the last hour
+    if (bool) {
+      res.send("Game Over: You are out of time!");
+      return;
+    } //if there is not moves in the last hour the player is out of time
+  }
 
-    moveArr.forEach((el) => {
-      newGame.play(el);
-    });
+  movesByGame.forEach((el) => moveArr.push(el.column_move));
+  console.log("Set of all moves: ", moveArr); //array of moves (columns) in the game
 
-    const table = newGame.ascii();
+  let newGame = new Connect4AI();
 
-    GameClass.getGame(req.body.id_game).then((game: any) => {
-      res.send(
-        table +
-          "\n\n Turn: " +
-          game.turn +
-          "\n Status: " +
-          game.status +
-          "\n Winner: " +
-          game.winner +
-          "\n Draw request: " +
-          game.leaveState
-      );
-    });
+  moveArr.forEach((el) => {
+    newGame.play(el);
+  });
+
+  const table = newGame.ascii();
+
+  GameClass.getGame(req.body.id_game).then((game: any) => {
+    res.send(
+      table +
+        "\n\n Turn: " +
+        game.turn +
+        "\n Status: " +
+        game.status +
+        "\n Winner: " +
+        game.winner +
+        "\n Draw request: " +
+        game.leaveState
+    );
   });
 }
 
-export async function dateLastMove(req: any, res: any) {
-  MoveClass.getTimeByGame(req.body.id_game, res);
+export async function dateLastMove(req: any) {
+  return MoveClass.checkLastHourMoves(req);
 }
 
 export async function chargeCredit(req: any, res: any) {
@@ -215,42 +234,41 @@ export async function chargeCredit(req: any, res: any) {
   res.send("Credit has been updated");
 }
 
-/*
 export async function getMovesList(req: any, res: any) {
   let list: string = "All Moves of match: " + req.body.id_game;
-  let cont: number = 0;
-  let stringMoves;
-  let jsonMoves;
-  MoveClass.findMovesbyGame(req.body.id_game).then((moves: any) => {
-    stringMoves = moves.map((move) => JSON.stringify(move));
-    jsonMoves = stringMoves.map((string) => JSON.parse(string));
-    // moves.forEach((move) => {
-    //  cont = cont + 1;
-    //  let stringMove =
-    //    "\n" +
-    //    cont +
-     //   ")" +
-    //    "Player: " +
-    //    move.email +
-    //    " -- Move: " +
-     //   move.column_move +
-     //   " -- Time: " +
-    //    move.timestamp_move;
-   //   list = list + stringMove;
-  //  });
-    fs.promises.writeFile("moves.txt", jsonMoves, function (err) {
-      if (err) {
-        console.log(err);
-      }
-    });
-    console.log("List: " + list);
-    res.send(jsonMoves);
-  });
-  console.log("List: " + jsonMoves);
-}
-*/
 
-export async function getMovesList(req: any, res: any) {
+  let fileString = "";
+  let separator = ",";
+  let fileType = "csv";
+  let file = `moves.${fileType}`;
+
+  MoveClass.findMovesbyGame(req.body.id_game).then((moves) => {
+    moves.forEach((move: any) => {
+      Object.keys(move[0]).forEach((value) => {
+        fileString = fileString + `${value}${separator}`;
+        console.log("Then: " + value);
+        console.log(fileString);
+      });
+      fileString = fileString.slice(0, -1);
+      fileString += "\n";
+
+      move.forEach((transaction) => {
+        console.log(transaction);
+        Object.values(transaction).forEach((value) => {
+          fileString += `${value}${separator}`;
+          console.log("Transaction: " + value);
+        });
+        fileString = fileString.slice(0, -1);
+        fileString += "\n";
+      });
+    });
+    res.send(list);
+  });
+
+  fs.writeFileSync(file, fileString, "utf8");
+}
+
+/*export async function getMovesList(req: any, res: any) {
   let stringMove;
   let cont = 0;
   let list: string = "All Moves of match: " + req.body.id_game;
@@ -275,4 +293,4 @@ export async function getMovesList(req: any, res: any) {
     });
     res.send(list);
   });
-}
+}*/
