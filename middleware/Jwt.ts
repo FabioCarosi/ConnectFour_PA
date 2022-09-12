@@ -47,16 +47,17 @@ export function verifyAndAuthenticate(req, res, next) {
 }
 
 enum role {
-  Admin = "Admin",
-  Player = "Player",
+  Admin = "admin",
+  Player = "player",
 }
 //check the right format of payload jwt
 export function checkFormatJwt(req: any, res: any, next: any) {
   try {
     const userRole = req.user.role;
     const userEmail = req.user.email;
+    const userRoleLower = userRole.toLowerCase();
     const isRight: boolean =
-      (userRole === role.Admin || userRole === role.Player) &&
+      (userRoleLower === role.Admin || userRoleLower === role.Player) &&
       typeof userEmail === "string" &&
       typeof userRole === "string" &&
       userEmail !== "ai";
@@ -74,6 +75,7 @@ export function checkFormatJwt(req: any, res: any, next: any) {
 export async function authAdmin(req: any, res: any, next: any) {
   try {
     const myRole = req.user.role;
+    const myRoleLower = myRole.toLowerCase();
     if (myRole === role.Admin) {
       next();
     } else {

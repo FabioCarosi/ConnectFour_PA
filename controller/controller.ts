@@ -269,10 +269,9 @@ export async function chargeCredit(req: any, res: any) {
 export async function getMovesList(req: any, res: any) {
   try {
     let stringMove;
-    let cont = 0;
     let separator = ",";
-    let list: string = "All Moves of match n. " + req.body.id_game;
-
+    let i = 0;
+    fs.writeFileSync("moves.json", "");
     const moves = await MoveClass.findMovesbyGame(req.body.id_game); //get all moves from DB
     if (req.body.format === "csv") {
       //if selected format is CSV prepare the header of file
@@ -283,10 +282,7 @@ export async function getMovesList(req: any, res: any) {
       fs.appendFileSync("moves.csv", head);
     }
     moves.forEach((move: any) => {
-      if (req.body.format === "json") {
-        stringMove = JSON.stringify(move) + ", \n"; //stringify the JSON to write it in the file
-        fs.appendFileSync("moves.json", stringMove); //add a move for each iteration
-      } else if (req.body.format === "csv") {
+     if (req.body.format === "csv") {
         stringMove = //prepare the correct format to CSV
           move.email +
           separator +
@@ -296,19 +292,14 @@ export async function getMovesList(req: any, res: any) {
           "\n";
         fs.appendFileSync("moves.csv", stringMove); //add a row for each iteration
       }
-      cont = cont + 1;
-      let out = //prepare a row for the response
-        "\n" +
-        cont +
-        ")" +
-        move.email +
-        separator +
-        move.column_move +
-        separator +
-        move.timestamp_move;
-      list = list + out;
+      
     });
-    res.send(list); //send the list of moves
+    if (req.body.format === "json") {
+      stringMove = JSON.stringify(moves); //stringify the JSON to write it in the file
+      fs.appendFileSync("moves.json", stringMove); //add a move for each iteration
+    }
+    
+    
   } catch (err) {
     controllerErrorHandler(err, res);
   }

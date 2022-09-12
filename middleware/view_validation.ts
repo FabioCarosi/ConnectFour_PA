@@ -9,11 +9,11 @@ export async function checkGetFormat(req: any, res: any, next: any) {
       greater = "greaterThan",
       less = "lessThan",
     }
-
+    const typeRequestLower = typeRequest.toLowerCase();
     if (
-      typeRequest === types.between ||
-      typeRequest === types.greater ||
-      typeRequest === types.less
+      typeRequestLower === types.between ||
+      typeRequestLower === types.greater ||
+      typeRequestLower === types.less
     ) {
       next();
     } else {

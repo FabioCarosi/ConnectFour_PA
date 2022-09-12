@@ -1,6 +1,7 @@
 var express = require("express");
 import * as controller from "./controller/controller";
 import * as chain from "./middleware/chain";
+var download = require("downloadjs");
 
 const PORT = 8080;
 const HOST = "0.0.0.0";
@@ -61,7 +62,11 @@ app.get("/viewGamesByUser", chain.viewValidation, (req, res) => {
 });
 
 app.post("/allMoves", chain.listValidation, (req, res) => {
-  controller.getMovesList(req, res);
-});
+  controller.getMovesList(req, res).then( () => {
+    let path = "/usr/src/app/moves." + req.body.format;
+    res.download(path); 
+  })
+  
+ });
 
 app.listen(PORT, HOST);
