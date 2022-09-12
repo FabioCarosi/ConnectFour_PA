@@ -43,7 +43,7 @@ export async function makeMove(req: any, res: any) {
         return;
       } //if there is not moves in the last hour the player is out of time
     }
-    const userMove = await MoveClass.Move.create(req.body);
+    const userMove = await MoveClass.Move.create(req.body); //create and save the move in DB
     const moveArr: number[] = [];
 
     //find all moves corrisponding to id_game of current game
@@ -230,41 +230,7 @@ export async function chargeCredit(req: any, res: any) {
   await UserClass.updateCredit(emailUser, -newCredit);
   res.send("Credit has been updated");
 }
-/*
-export async function getMovesList(req: any, res: any) {
-  let list: string = "All Moves of match: " + req.body.id_game;
 
-  let fileString = "";
-  let separator = ",";
-  let fileType = "csv";
-  let file = `moves.${fileType}`;
-
-  MoveClass.findMovesbyGame(req.body.id_game).then((moves) => {
-    moves.forEach((move: any) => {
-      Object.keys(move[0]).forEach((value) => {
-        fileString = fileString + `${value}${separator}`;
-        console.log("Then: " + value);
-        console.log(fileString);
-      });
-      fileString = fileString.slice(0, -1);
-      fileString += "\n";
-
-      move.forEach((transaction) => {
-        console.log(transaction);
-        Object.values(transaction).forEach((value) => {
-          fileString += `${value}${separator}`;
-          console.log("Transaction: " + value);
-        });
-        fileString = fileString.slice(0, -1);
-        fileString += "\n";
-      });
-    });
-    res.send(list);
-  });
-
-  fs.writeFileSync(file, fileString, "utf8");
-}
-*/
 export async function getMovesList(req: any, res: any) {
   let stringMove;
   let cont = 0;
@@ -274,8 +240,10 @@ export async function getMovesList(req: any, res: any) {
   const moves = await MoveClass.findMovesbyGame(req.body.id_game);
   if (req.body.format === "csv") {
     separator = req.body.separator;
+    const sepHead = "sep = " + separator + "\n";
     const head = "Player" + separator + "Move" + separator + "Time \n";
-    fs.writeFileSync("moves.csv", head);
+    fs.writeFileSync("moves.csv", sepHead);
+    fs.appendFileSync("moves.csv", head);
   }
   moves.forEach((move: any) => {
     if (req.body.format === "json") {
