@@ -31,7 +31,7 @@ export async function startGame(req: any, res: any): Promise<void> {
       }
       console.log("You are playing against ", game.playerTwo);
       //res.status(successMsg.msgStatus);
-      res.send("Game ID: ", game.id_game, "\n", newGame.ascii());
+      res.send("Game ID: " + game.id_game + "\n" + newGame.ascii());
     });
   } catch (err) {
     controllerErrorHandler(err, res);

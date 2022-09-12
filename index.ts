@@ -1,5 +1,5 @@
 var express = require("express");
-import * as controller from "./controllerProva/controller";
+import * as controller from "./controller/controller";
 import * as chain from "./middleware/chain";
 
 const PORT = 8080;
@@ -48,10 +48,6 @@ app.post("/leaveGame", chain.leaveValidation, (req, res) => {
 
 app.post("/stateGame", chain.stateValidation, (req, res) => {
   controller.stateGame(req, res);
-});
-
-app.post("/time", chain.stateValidation, (req, res) => {
-  res.send(controller.dateLastMove(req));
 });
 
 //Questa rotta permette all'admin di aggiornare il credito di un utente

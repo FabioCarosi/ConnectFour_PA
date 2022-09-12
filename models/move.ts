@@ -36,9 +36,6 @@ export const Move = connection.define(
   }
 );
 
-/*Game.belongsTo(User, {foreignKey: "email_user",  targetKey: "email"});
-Game.belongsTo(Game, {foreignKey: "id_game",  targetKey: "id_game"});*/
-
 /*Once that a move is made, the game's turn changes to the next player*/
 Move.addHook("afterCreate", async (move: any, options) => {
   await GameClass.Game.findOne({
@@ -51,6 +48,7 @@ Move.addHook("afterCreate", async (move: any, options) => {
           where: { id_game: move.id_game },
         }
       );
+      console.log("Now is turn of: ", currGame.playerTwo);
       UserClass.updateCredit(currGame.playerOne, 0.01);
     } else {
       GameClass.Game.update(
@@ -59,12 +57,14 @@ Move.addHook("afterCreate", async (move: any, options) => {
           where: { id_game: move.id_game },
         }
       );
+      console.log("Now is turn of: ", currGame.playerOne);
     }
   });
 });
 
 /*
-Restituisce tutte le mosse fatte in una certa partita passando come parametro il suo id 
+Finds all moves in a given game
+@param idGame game identifier
 */
 export async function findMovesbyGame(idGame: any) {
   const allMoves = await Move.findAll({
@@ -92,7 +92,6 @@ export async function checkLastHourMoves(req: any) {
   });
   if (latestMoves.length === 0) {
     const opponent = await UserClass.findWinnerOutTime(req.body.id_game);
-    console.log("OPPONENT: " + opponent);
     await GameClass.updateGameOver(req.body.id_game, "OutOfTime");
     await GameClass.updateWinner(req.body.id_game, opponent);
 
