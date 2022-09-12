@@ -49,6 +49,7 @@ export async function makeMove(req: any, res: any) {
     /*
     Here, a new Move istance is created in DB
     */
+    
     const savedMoves = await MoveClass.findMovesbyGame(req.body.id_game); //find all the moves of the game
     if (savedMoves.length !== 0) {
       //if there are moves
@@ -58,7 +59,7 @@ export async function makeMove(req: any, res: any) {
         return;
       } //if there is not moves in the last hour the player is out of time
     }
-    await MoveClass.Move.create(req.body); //create and save the move in DB
+    
     const moveArr: number[] = []; //array where moves found in DB will be pushed
 
     //Find all moves corrisponding to id_game of current game
@@ -72,9 +73,17 @@ export async function makeMove(req: any, res: any) {
 
     let newGame = new Connect4AI();
 
-    moveArr.forEach((el) => {
+    moveArr.forEach((el) => { 
       newGame.play(el);
     });
+    
+    //check if move in column_move is valid or not before saving it in DB
+    try {
+      newGame.play(req.body.column_move);
+      await MoveClass.Move.create(req.body); //create and save the move in DB
+    } catch (error) {
+        res.send("Move is not valid");
+    }
     console.log(newGame.ascii());
     console.log(newGame.gameStatus());
 

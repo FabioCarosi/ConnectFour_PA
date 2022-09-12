@@ -1,3 +1,4 @@
+require('dotenv').config();
 import { ErrEnum } from "../Factory/ErrorFactory";
 import * as GameClass from "../models/game";
 import * as UserClass from "../models/user";
@@ -38,7 +39,7 @@ export function checkToken(req, res, next) {
 
 export function verifyAndAuthenticate(req, res, next) {
   try {
-    let decoded = jwt.verify(req.token, "mysupersecretkey");
+    let decoded = jwt.verify(req.token, process.env.SECRET_KEY);
     if (decoded !== null) req.user = decoded;
     next();
   } catch (err) {
