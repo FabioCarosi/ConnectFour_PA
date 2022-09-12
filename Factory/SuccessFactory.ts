@@ -63,6 +63,15 @@ class SuccessDraw implements Message {
     }
 }
 
+class SuccessDownload implements Message{
+    getMsg():{msgString: string, msgStatus: number}{
+        return{
+        msgStatus : StatusCode.SuccessOK, //200
+        msgString: "File downloaded successfully"
+        }
+    }
+}
+
 export enum SuccEnum {
     SuccessGeneric,
     SuccessNewGame,
@@ -75,7 +84,7 @@ export enum SuccEnum {
 
 export class SuccessFactory {
     constructor(){}
-    getError (type:SuccEnum): Message{
+    getSuccess (type:SuccEnum): Message{
         let msgSuccess:Message;
         switch (type){
             case SuccEnum.SuccessGeneric:

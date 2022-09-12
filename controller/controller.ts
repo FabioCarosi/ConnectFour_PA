@@ -261,7 +261,7 @@ export async function chargeCredit(req: any, res: any){
     const newCredit = req.body.newCredit;
     const emailUser = req.body.email;
     await UserClass.updateCredit(emailUser, -newCredit);
-    res.send("Credit has been updated");
+    res.send("Credit has been updated"); //SuccessCreditUpdated
   } catch (err) {
       controllerErrorHandler(err, res);
   }
