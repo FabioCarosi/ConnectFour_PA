@@ -1,8 +1,8 @@
 import * as body from "./body_validation";
 import * as game from "./game_validation";
 import * as Jwt from "./Jwt";
-import * as view from './view_validation';
-import * as validErrHandler from './validationErrorHandler';
+import * as validErrHandler from "./validationErrorHandler";
+import * as view from "./view_validation";
 
 export const JwtValidation = [
   Jwt.requestTime,
@@ -10,7 +10,7 @@ export const JwtValidation = [
   Jwt.checkToken,
   Jwt.verifyAndAuthenticate,
   Jwt.checkFormatJwt,
-  validErrHandler.validErrorHandler
+  validErrHandler.validErrorHandler,
 ];
 
 export const gameValidation = [
@@ -20,7 +20,7 @@ export const gameValidation = [
   Jwt.verifyUserTwo,
   Jwt.checkExistingGame,
   Jwt.checkUserCredit,
-  validErrHandler.validErrorHandler
+  validErrHandler.validErrorHandler,
 ];
 export const moveValidation = [
   body.moveBodyValidation,
@@ -29,32 +29,38 @@ export const moveValidation = [
   Jwt.checkAuthMove,
   game.isGameOver,
   Jwt.isYourCurrentTurn,
-  validErrHandler.validErrorHandler
+  validErrHandler.validErrorHandler,
 ];
 export const leaveValidation = [
   Jwt.checkUserExistence,
   game.checkGameExistence,
   Jwt.checkAuthMove,
   game.isGameOver,
-  validErrHandler.validErrorHandler
+  validErrHandler.validErrorHandler,
 ];
 
 export const viewValidation = [
   Jwt.checkUserExistence,
   view.checkGetFormat,
-  validErrHandler.validErrorHandler
+  validErrHandler.validErrorHandler,
 ];
 
 export const stateValidation = [
-    Jwt.checkAuthMove,
-    game.checkGameExistence,
-    validErrHandler.validErrorHandler
+  Jwt.checkAuthMove,
+  game.checkGameExistence,
+  validErrHandler.validErrorHandler,
 ];
 
 export const chargeValidation = [
-    Jwt.checkUserExistence,
-    Jwt.authAdmin,
-    game.adapterCheckPlayerTwo,
-    game.checkPlayerTwoExistence,
-    validErrHandler.validErrorHandler
+  Jwt.checkUserExistence,
+  Jwt.authAdmin,
+  game.adapterCheckPlayerTwo,
+  game.checkPlayerTwoExistence,
+  validErrHandler.validErrorHandler,
+];
+
+export const listValidation = [
+  Jwt.checkUserExistence,
+  game.checkGameExistence,
+  validErrHandler.validErrorHandler,
 ];

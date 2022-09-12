@@ -1,4 +1,4 @@
-import { ErrEnum } from '../Factory/ErrorFactory';
+import { ErrEnum } from "../Factory/ErrorFactory";
 
 export async function gameBodyValidation(req: any, res: any, next: any) {
   try {
@@ -9,9 +9,8 @@ export async function gameBodyValidation(req: any, res: any, next: any) {
       next(ErrEnum.ErrBodyFormat);
     }
   } catch (error) {
-      next(ErrEnum.GenericError);
+    next(ErrEnum.GenericError);
   }
-  
 }
 
 export async function moveBodyValidation(req: any, res: any, next: any) {
@@ -32,5 +31,4 @@ export async function moveBodyValidation(req: any, res: any, next: any) {
   } catch (error) {
     next(ErrEnum.GenericError);
   }
-  
 }

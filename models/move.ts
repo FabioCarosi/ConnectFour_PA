@@ -36,9 +36,6 @@ export const Move = connection.define(
   }
 );
 
-/*Game.belongsTo(User, {foreignKey: "email_user",  targetKey: "email"});
-Game.belongsTo(Game, {foreignKey: "id_game",  targetKey: "id_game"});*/
-
 /*Once that a move is made, the game's turn changes to the next player*/
 Move.addHook("afterCreate", async (move: any, options) => {
   await GameClass.Game.findOne({
@@ -51,7 +48,7 @@ Move.addHook("afterCreate", async (move: any, options) => {
           where: { id_game: move.id_game },
         }
       );
-      console.log("Now is turn of: ",currGame.playerTwo);
+      console.log("Now is turn of: ", currGame.playerTwo);
       UserClass.updateCredit(currGame.playerOne, 0.01);
     } else {
       GameClass.Game.update(
@@ -60,7 +57,7 @@ Move.addHook("afterCreate", async (move: any, options) => {
           where: { id_game: move.id_game },
         }
       );
-      console.log("Now is turn of: ",currGame.playerOne);
+      console.log("Now is turn of: ", currGame.playerOne);
     }
   });
 });
@@ -72,40 +69,34 @@ Finds all moves in a given game
 export async function findMovesbyGame(idGame: any) {
   const allMoves = await Move.findAll({
     where: { id_game: idGame },
+    //attributes: ['column_move'],
     raw: true,
   });
 
   return allMoves;
 }
 
-export async function getTimeByGame(idGame: any, res: any) {
-  /* const lastMove = await Move.findOne({
-    where: { id_game: idGame },
-    order: [["timestamp_move", "DESC"]],
-    raw: true,
-  });
-  console.log(lastMove);
-  return lastMove;*/
+export async function checkLastHourMoves(req: any) {
   let dt = new Date();
-  let err;
-  dt.setHours(dt.getHours() - 3);
+
+  dt.setHours(dt.getHours() - 1);
   console.log(dt);
 
-  Move.findAll({
+  const latestMoves = await Move.findAll({
     where: {
-      id_game: idGame,
+      id_game: req.body.id_game,
       timestamp_move: {
         [Op.gt]: dt,
       },
     },
-  }).then((latestMoves: any) => {
-    if (latestMoves.length === 0) {
-      GameClass.updateGameOver(idGame);
-      err = "Game Over";
-    } else {
-      err = "BASTA";
-    }
-    res.send(dt + " " + err);
-    return latestMoves;
   });
+  if (latestMoves.length === 0) {
+    const opponent = await UserClass.findWinnerOutTime(req.body.id_game);
+    await GameClass.updateGameOver(req.body.id_game, "OutOfTime");
+    await GameClass.updateWinner(req.body.id_game, opponent);
+
+    return true;
+  } else {
+    return false;
+  }
 }

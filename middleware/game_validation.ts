@@ -1,6 +1,6 @@
+import { ErrEnum } from "../Factory/ErrorFactory";
 import * as GameClass from "../models/game";
 import * as UserClass from "../models/user";
-import { ErrEnum } from '../Factory/ErrorFactory';
 
 //check if id_game of the move corrisponds to an existing game
 export async function checkGameExistence(req: any, res: any, next: any) {
@@ -10,15 +10,13 @@ export async function checkGameExistence(req: any, res: any, next: any) {
     }).then((game: any) => {
       if (game != null) {
         next();
-      } 
-      else {
-        next(ErrEnum.ErrGameExistence)
+      } else {
+        next(ErrEnum.ErrGameExistence);
       }
     });
   } catch (error) {
-      next(ErrEnum.GenericError);
+    next(ErrEnum.GenericError);
   }
-  
 }
 
 //funzione che verifica l'esistenza del secondo utente nel payload dell'invio della richiesta di una nuova partita
@@ -32,21 +30,19 @@ export async function checkPlayerTwoExistence(req: any, res: any, next: any) {
       if (user != null) {
         next();
       } else {
-          next(ErrEnum.ErrUserExistence);
+        next(ErrEnum.ErrUserExistence);
       }
     });
   } catch (error) {
-      next(ErrEnum.GenericError);
+    next(ErrEnum.GenericError);
   }
-  
 }
 
-export async function adapterCheckPlayerTwo(req: any, res: any, next: any){
-  try{
+export async function adapterCheckPlayerTwo(req: any, res: any, next: any) {
+  try {
     req.body.playerTwo = req.body.email;
     next();
-  }
-  catch(err){
+  } catch (err) {
     next(ErrEnum.GenericError);
   }
 }
@@ -66,9 +62,6 @@ export async function isGameOver(req: any, res: any, next: any) {
       }
     });
   } catch (error) {
-      next(ErrEnum.GenericError);
+    next(ErrEnum.GenericError);
   }
-  
 }
-
-//funzione che verifica l'ammissibilità della mossa (non deve superare la griglia del gioco)

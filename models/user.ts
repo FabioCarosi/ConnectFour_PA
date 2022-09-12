@@ -44,6 +44,15 @@ export async function findPlayerTwoByGame(idGame) {
   return user;
 }
 
+export async function findPlayerTurn(idGame) {
+  const game: any = await GameClass.Game.findOne({
+    where: { id_game: idGame },
+    raw: true,
+  });
+  const user: string = game.turn;
+  return user;
+}
+
 //funzione che restituisce il credito dell'utente
 export async function getCredit(emailUser: string) {
   const user: any = await User.findOne({
@@ -63,4 +72,12 @@ export async function updateCredit(emailUser, lessCredit) {
       where: { email: emailUser },
     }
   );
+}
+
+export async function findWinnerOutTime(idGame) {
+  let user1: string = await findPlayerOneByGame(idGame);
+  let user2: string = await findPlayerTwoByGame(idGame);
+  let turn: string = await findPlayerTurn(idGame);
+  if (turn === user1) return user2;
+  if (turn === user2) return user1;
 }
