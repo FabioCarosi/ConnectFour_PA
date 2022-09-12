@@ -1,14 +1,11 @@
-const { Connect4AI } = require("../node_modules/connect4-ai/index");
-const { Connect4 } = require("../node_modules/connect4-ai/index");
-const { seq } = require("sequelize");
+const { Connect4AI, Connect4 } = require("connect4-ai");
 
 import * as fs from "fs";
 import * as GameClass from "../models/game";
 import * as MoveClass from "../models/move";
 import * as UserClass from "../models/user";
 
-//rotta per creare una partita
-
+//create the game and save it in DB
 export async function startGame(req: any, res: any): Promise<void> {
   console.log("Now");
   let newGame;
@@ -18,7 +15,7 @@ export async function startGame(req: any, res: any): Promise<void> {
   try {
     await GameClass.Game.create(req.body).then((game: any) => {
       console.log("Game has started");
-      //aggiorna credito playerOne
+      //update playerOne credit
       UserClass.updateCredit(req.user.email, lessCredit);
 
       if (game.playerTwo === "ai") {
@@ -276,6 +273,7 @@ export async function getMovesList(req: any, res: any) {
 
   const moves = await MoveClass.findMovesbyGame(req.body.id_game);
   if (req.body.format === "csv") {
+    separator = req.body.separator;
     const head = "Player" + separator + "Move" + separator + "Time \n";
     fs.writeFileSync("moves.csv", head);
   }
