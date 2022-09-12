@@ -55,11 +55,6 @@ export const Game = connection.define(
   }
 );
 
-/*Game.belongsTo(User, {foreignKey: "playerOne",  targetKey: "email"});
-Game.belongsTo(User, {foreignKey: "playerTwo",  targetKey: "email"});
-Game.belongsTo(User, {foreignKey: "winner",  targetKey: "email"});
-
-
 /*
 update game status in "In progress" when a new game is created
 When playerOne creates the game, it is playerOne's turn
@@ -70,11 +65,7 @@ Game.addHook("afterCreate", async (game: any, options) => {
 
 export async function getGame(idGame) {
   const game = await Game.findByPk(idGame);
-  if (game === null) {
-    console.log("Game not found!");
-  } else {
-    return game;
-  }
+  return game;
 }
 
 export async function getGameByDateBetween(player, myFirstDate, mySecondDate) {
@@ -138,12 +129,11 @@ export async function getGameByDateLessThan(player, myDate) {
 }
 
 export async function getDifficulty(idGame: any) {
-  const difficulty = await Game.findOne({
+  const game: any = await Game.findOne({
     where: { id_game: idGame },
-    attributes: ["difficulty"],
     raw: true,
   });
-
+  const difficulty: string = game.difficulty;
   return difficulty;
 }
 
@@ -181,77 +171,53 @@ export async function updateWinner(idGame, winnerEmail) {
 
 export async function leaveMatch(req: any, res: any) {
   let gameFound;
-  let user1: string = "";
-  let user2: string = "";
+
   let leaveState: string = "";
 
-  console.log("Start getGame now");
+  const game = getGame(req.body.id_game);
+  gameFound = game;
+  leaveState = gameFound.leaveState;
 
-  console.log(req.body.id_game);
+  const user1: string = await UserClass.findPlayerOneByGame(req.body.id_game);
 
-  getGame(req.body.id_game).then((game) => {
-    gameFound = game;
-    leaveState = gameFound.leaveState;
-    console.log(leaveState);
-    console.log(req.user.email);
-    UserClass.findPlayerOneByGame(req.body.id_game).then((userOne) => {
-      user1 = userOne;
-      console.log(user1);
-      console.log(req.user.email);
+  const user2: string = await UserClass.findPlayerTwoByGame(req.body.id_game);
 
-      UserClass.findPlayerTwoByGame(req.body.id_game).then((userTwo) => {
-        user2 = userTwo;
-        console.log(user2);
-        console.log(req.user.email);
-
-        if (
-          (req.user.email == user1 && leaveState == user2) ||
-          (req.user.email == user2 && leaveState == user1)
-        ) {
-          console.log("primo if");
-          Game.update(
-            {
-              leaveState: "Leave",
-              status: "Game Over",
-              winner: "Draw",
-            },
-            {
-              where: {
-                id_game: req.body.id_game,
-              },
-            }
-          );
-          res.send("Game Over - Draw");
-        } else if (req.user.email == user1 && leaveState !== user2) {
-          console.log("secondo if");
-          Game.update(
-            { leaveState: user1 },
-            {
-              where: {
-                id_game: req.body.id_game,
-              },
-            }
-          );
-          res.send("Draw request saved");
-        } else if (req.user.email == user2 && leaveState !== user1) {
-          console.log("terzo if");
-          console.log(req.user.email);
-
-          Game.update(
-            { leaveState: user2 },
-            {
-              where: {
-                id_game: req.body.id_game,
-              },
-            }
-          );
-          res.send("Draw request saved");
-        } else {
-          console.log("else");
-          console.log(user1, user2, leaveState, req.user.email);
-          res.send("Problem with draw request");
-        }
-      });
-    });
-  });
+  if (
+    (req.user.email == user1 && leaveState == user2) ||
+    (req.user.email == user2 && leaveState == user1)
+  ) {
+    await Game.update(
+      {
+        leaveState: "Leave",
+        status: "Game Over",
+        winner: "Draw",
+      },
+      {
+        where: {
+          id_game: req.body.id_game,
+        },
+      }
+    );
+    res.send("Game Over - Draw");
+  } else if (req.user.email == user1 && leaveState !== user2) {
+    await Game.update(
+      { leaveState: user1 },
+      {
+        where: {
+          id_game: req.body.id_game,
+        },
+      }
+    );
+    res.send("Draw request saved");
+  } else if (req.user.email == user2 && leaveState !== user1) {
+    await Game.update(
+      { leaveState: user2 },
+      {
+        where: {
+          id_game: req.body.id_game,
+        },
+      }
+    );
+    res.send("Draw request saved");
+  }
 }
