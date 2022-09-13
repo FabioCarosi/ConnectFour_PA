@@ -85,7 +85,7 @@ export async function findMovesbyGame(idGame: any) {
 export async function checkLastHourMoves(req: any) {
   let dt = new Date();
 
-  dt.setHours(dt.getHours() - 12);
+  dt.setHours(dt.getHours() - 1);
   console.log(dt);
 
   const latestMoves = await Move.findAll({

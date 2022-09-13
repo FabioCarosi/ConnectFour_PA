@@ -5,6 +5,7 @@ export const string_leaveGame: string = "Abandoned match";
 export const string_inProgress: string = "In Progress";
 export const string_draw: string = "Draw";
 export const string_ai: string = "ai";
+export const string_noWinner: string = "No Winner";
 
 export const string_between: string = "between";
 export const string_greaterThan: string = "greaterThan";
