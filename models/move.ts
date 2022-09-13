@@ -5,7 +5,6 @@ import * as UserClass from "./user";
 
 const connection: Sequelize = Singleton.getInstance();
 
-
 export const Move = connection.define(
   "move",
   {
@@ -43,32 +42,31 @@ Move.addHook("afterCreate", async (move: any, options) => {
     where: { id_game: move.id_game },
   });
   if (currGame.turn === currGame.playerOne) {
-      await GameClass.Game.update(
-        { turn: currGame.playerTwo },
-        {
-          where: { id_game: move.id_game },
-        }
-      );
-      console.log("Now is turn of: ", currGame.playerTwo);
-      await UserClass.updateCredit(currGame.playerOne, 0.01);
+    await GameClass.Game.update(
+      { turn: currGame.playerTwo },
+      {
+        where: { id_game: move.id_game },
+      }
+    );
+    console.log("Now is turn of: ", currGame.playerTwo);
+    await UserClass.updateCredit(currGame.playerOne, 0.01);
   } else {
-      await GameClass.Game.update(
-        { turn: currGame.playerOne },
-        {
-          where: { id_game: move.id_game },
-        }
-      );
-      console.log("Now is turn of: ", currGame.playerOne);
-    }
-    setTimeout( //set Timeout of 1h, then check if there has been moves since then
-      async() =>  {
-       await checkLastHourMoves(move);
-     }, 3600000); 
-  });
-  
-
-
-
+    await GameClass.Game.update(
+      { turn: currGame.playerOne },
+      {
+        where: { id_game: move.id_game },
+      }
+    );
+    console.log("Now is turn of: ", currGame.playerOne);
+  }
+  setTimeout(
+    //set Timeout of 1h, then check if there has been moves since then
+    async () => {
+      await checkLastHourMoves(move);
+    },
+    3600000
+  );
+});
 
 /*
 Finds all moves in a given game
@@ -84,25 +82,27 @@ export async function findMovesbyGame(idGame: any) {
 }
 
 //function that check how much time has passed from the latest move
-export async function checkLastHourMoves(move: any) {
+export async function checkLastHourMoves(req: any) {
   let dt = new Date();
 
-  dt.setHours(dt.getHours() - 1);
-  
+  dt.setHours(dt.getHours() - 12);
+  console.log(dt);
 
   const latestMoves = await Move.findAll({
     where: {
-      id_game: move.id_game,
+      id_game: req.body.id_game,
       timestamp_move: {
-        [Op.gt]: dt, //find all moves made in the last hour
+        [Op.gt]: dt,
       },
     },
   });
   if (latestMoves.length === 0) {
-    const opponent = await UserClass.findWinnerOutTime(move.id_game);
-    await GameClass.updateGameOver(move.id_game, "OutOfTime");
-    await GameClass.updateWinner(move.id_game, opponent);
-    console.log("Game out of time");
+    const opponent = await UserClass.findWinnerOutTime(req.body.id_game);
+    await GameClass.updateGameOver(req.body.id_game, "OutOfTime");
+    await GameClass.updateWinner(req.body.id_game, opponent);
+
     return true;
-  } 
+  } else {
+    return false;
+  }
 }

@@ -27,11 +27,18 @@ export async function startGame(req: any, res: any): Promise<void> {
       //successFactory --> credit has been successfully updated
 
       const msg: string = controllerSuccessMsg(SuccEnum.SuccessNewGame, res);
-      res.send(msg + "\n" + "Game ID: " + game.id_game  
-                + "\n"+ "You are playing against "+ game.playerTwo);
+      res.send(
+        msg +
+          "\n" +
+          "Game ID: " +
+          game.id_game +
+          "\n" +
+          "You are playing against " +
+          game.playerTwo
+      );
     });
   } catch (err) {
-      controllerErrorHandler(ErrEnum.GenericError, res);
+    controllerErrorHandler(ErrEnum.GenericError, res);
   }
 }
 
@@ -43,11 +50,21 @@ export async function startGame(req: any, res: any): Promise<void> {
 export async function makeMove(req: any, res: any) {
   try {
     req.body.email = req.user.email; //email in body's request is instantiated with the user's email in JWT payload
-    
+
     const moveArr: number[] = []; //array where moves found in DB will be pushed
 
     //Find all moves corrisponding to id_game of current game
     const movesByGame: any = await MoveClass.findMovesbyGame(req.body.id_game);
+
+    if (movesByGame.length !== 0) {
+      //if there are moves
+      const bool = await MoveClass.checkLastHourMoves(req); //then check if there are moves in the last hour
+      if (bool) {
+        res.send("Game Over: You are out of time!");
+        return;
+      } //if there is not moves in the last hour the player is out of time
+    }
+
     movesByGame.forEach((el) => moveArr.push(el.column_move));
 
     //Find playerTwo in the game to select IA or UserVSUser mode
@@ -57,17 +74,17 @@ export async function makeMove(req: any, res: any) {
 
     let newGame = new Connect4AI();
 
-    moveArr.forEach((el) => { 
+    moveArr.forEach((el) => {
       newGame.play(el);
     });
-    
+
     //check if move in column_move is valid or not before saving it in DB
     try {
       newGame.play(req.body.column_move);
       await MoveClass.Move.create(req.body); //create and save the move in DB
     } catch (error) {
-        controllerErrorHandler(ErrEnum.ErrInvalidMove, res); //move is not valid
-        return;
+      controllerErrorHandler(ErrEnum.ErrInvalidMove, res); //move is not valid
+      return;
     }
     console.log(newGame.ascii());
     console.log(newGame.gameStatus());
@@ -78,7 +95,6 @@ export async function makeMove(req: any, res: any) {
       const difficulty: string = await GameClass.getDifficulty(
         req.body.id_game
       );
-      
 
       //create AI move in db if game is not over
       if (!newGame.gameStatus().gameOver) {
@@ -93,24 +109,24 @@ export async function makeMove(req: any, res: any) {
         });
       }
     }
-    
+
     const msg: string = controllerSuccessMsg(SuccEnum.SuccessNewMove, res);
-    
+
     if (newGame.gameStatus().gameOver) {
       await GameClass.updateGameOver(req.body.id_game, "GameOver");
       const winner: string = await GameClass.updateWinnerByNumber(
         req.body.id_game,
         newGame.gameStatus().winner
       );
-      res.send(msg +"\n Game is over \n Winner is: "+ winner + "\n" + newGame.ascii());
+      res.send(
+        msg + "\n Game is over \n Winner is: " + winner + "\n" + newGame.ascii()
+      );
       return;
-
     }
-    
-    res.send(msg + "\n" + newGame.ascii());
 
+    res.send(msg + "\n" + newGame.ascii());
   } catch (err) {
-      controllerErrorHandler(err, res);
+    controllerErrorHandler(err, res);
   }
 }
 
@@ -189,10 +205,12 @@ export async function viewGamesByUser(req: any, res: any) {
       };
       gamesFiltered.push(body);
     }
-    const msg: string = controllerSuccessMsg(SuccEnum.SuccessViewGamesByUser, res);
+    const msg: string = controllerSuccessMsg(
+      SuccEnum.SuccessViewGamesByUser,
+      res
+    );
     console.log(gamesFiltered);
-    res.send(gamesFiltered);  
-    
+    res.send(gamesFiltered);
   } catch (err) {
     controllerErrorHandler(ErrEnum.GenericError, res);
   }
@@ -213,9 +231,16 @@ export async function leaveGame(req: any, res: any) {
 export async function stateGame(req: any, res: any) {
   try {
     let moveArr: number[] = [];
-
     //find all moves corrisponding to id_game of current game
     const movesByGame: any = await MoveClass.findMovesbyGame(req.body.id_game);
+    if (movesByGame.length !== 0) {
+      //if there are moves
+      const bool = await MoveClass.checkLastHourMoves(req); //then check if there are moves in the last hour
+      if (bool) {
+        res.send("Game Over: You are out of time!");
+        return;
+      } //if there is not moves in the last hour the player is out of time
+    }
 
     movesByGame.forEach((el) => moveArr.push(el.column_move));
     console.log("Set of all moves: ", moveArr); //array of moves (columns) in the game
@@ -227,12 +252,16 @@ export async function stateGame(req: any, res: any) {
     });
 
     const table = newGame.ascii(); //table of game
-    const msg: string = controllerSuccessMsg(SuccEnum.SuccessViewStateGame, res);
+    const msg: string = controllerSuccessMsg(
+      SuccEnum.SuccessViewStateGame,
+      res
+    );
     await GameClass.getGame(req.body.id_game).then((game: any) => {
       //get the informations of game
       res.send(
-        msg + "\n" +
-        table +
+        msg +
+          "\n" +
+          table +
           "\n\n Turn: " +
           game.turn +
           "\n Status: " +
@@ -244,7 +273,7 @@ export async function stateGame(req: any, res: any) {
       );
     });
   } catch (err) {
-      controllerErrorHandler(err, res);
+    controllerErrorHandler(err, res);
   }
 }
 
@@ -254,8 +283,11 @@ export async function chargeCredit(req: any, res: any) {
     const newCredit = req.body.newCredit;
     const emailUser = req.body.email;
     await UserClass.updateCredit(emailUser, -newCredit);
-    const msg: string = controllerSuccessMsg(SuccEnum.SuccessCreditUpdated, res);
-    res.send(msg); 
+    const msg: string = controllerSuccessMsg(
+      SuccEnum.SuccessCreditUpdated,
+      res
+    );
+    res.send(msg);
   } catch (err) {
     controllerErrorHandler(err, res);
   }
@@ -277,7 +309,7 @@ export async function getMovesList(req: any, res: any) {
       fs.appendFileSync("moves.csv", head);
     }
     moves.forEach((move: any) => {
-     if (req.body.format === "csv") {
+      if (req.body.format === "csv") {
         stringMove = //prepare the correct format to CSV
           move.email +
           separator +
@@ -287,14 +319,11 @@ export async function getMovesList(req: any, res: any) {
           "\n";
         fs.appendFileSync("moves.csv", stringMove); //add a row for each iteration
       }
-      
     });
     if (req.body.format === "json") {
       stringMove = JSON.stringify(moves); //stringify the JSON to write it in the file
       fs.appendFileSync("moves.json", stringMove); //add a move for each iteration
     }
-    
-    
   } catch (err) {
     controllerErrorHandler(err, res);
   }

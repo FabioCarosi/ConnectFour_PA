@@ -1,10 +1,8 @@
 import { DataTypes, Op, Sequelize } from "sequelize";
+import { controllerSuccessMsg } from "../controller/controllerSuccessMessage";
+import { SuccEnum } from "../Factory/SuccessFactory";
 import { Singleton } from "./singletonDB";
 import * as UserClass from "./user";
-import * as MoveClass from "./move";
-import { controllerSuccessMsg } from "../controller/controllerSuccessMessage";
-import { ErrEnum } from "../Factory/ErrorFactory";
-import { SuccEnum, SuccessFactory } from "../Factory/SuccessFactory";
 
 const connection: Sequelize = Singleton.getInstance();
 
@@ -65,11 +63,7 @@ When playerOne creates the game, it is playerOne's turn
 */
 Game.addHook("afterCreate", async (game: any, options) => {
   await game.update({ status: "In progress", turn: game.playerOne });
- 
 });
-
-
-
 
 export async function getGame(idGame) {
   const game = await Game.findByPk(idGame);
@@ -147,7 +141,7 @@ export async function getDifficulty(idGame: any) {
   return difficulty;
 }
 
-//update game's status 
+//update game's status
 export async function updateGameOver(idGame, status) {
   await Game.update(
     { status: status },
@@ -186,55 +180,46 @@ export async function updateWinner(idGame, winnerEmail) {
 //function that allows a player to make a draw request
 //if both player has accepted draw, then game's status is updated in "Draw"
 export async function leaveMatch(req: any, res: any) {
-
-  let leaveState: string = "";
-
   const game: any = await getGame(req.body.id_game);
-  leaveState = game.leaveState;
+  const leaveState = game.leaveState;
 
   const user1: string = await UserClass.findPlayerOneByGame(req.body.id_game);
-
   const user2: string = await UserClass.findPlayerTwoByGame(req.body.id_game);
 
   if (
     (req.user.email == user1 && leaveState == user2) ||
     (req.user.email == user2 && leaveState == user1)
   ) {
-    await Game.update(
-      {
-        leaveState: "Leave",
-        status: "Game Over",
-        winner: "Draw",
-      },
-      {
-        where: {
-          id_game: req.body.id_game,
-        },
-      }
-    );
+    await updateGameAtributes(req.body.id_game, "Leave", "Leave Game", "Draw");
     const msg: string = controllerSuccessMsg(SuccEnum.SuccessDraw, res);
-    res.send(msg); 
+    res.send(msg);
   } else if (req.user.email == user1 && leaveState !== user2) {
-    await Game.update(
-      { leaveState: user1 },
-      {
-        where: {
-          id_game: req.body.id_game,
-        },
-      }
-    );
+    await updateGameAtributes(req.body.id_game, user1);
     const msg: string = controllerSuccessMsg(SuccEnum.SuccessDrawRequest, res);
-    res.send(msg); 
+    res.send(msg);
   } else if (req.user.email == user2 && leaveState !== user1) {
-    await Game.update(
-      { leaveState: user2 },
-      {
-        where: {
-          id_game: req.body.id_game,
-        },
-      }
-    );
+    await updateGameAtributes(req.body.id_game, user2);
     const msg: string = controllerSuccessMsg(SuccEnum.SuccessDrawRequest, res);
-    res.send(msg); 
+    res.send(msg);
   }
+}
+
+async function updateGameAtributes(
+  idGame: number,
+  leaveState: string = "InProgress",
+  status: string = "In progress",
+  winner: string = "none"
+) {
+  Game.update(
+    {
+      leaveState: leaveState,
+      status: status,
+      winner: winner,
+    },
+    {
+      where: {
+        id_game: idGame,
+      },
+    }
+  );
 }
