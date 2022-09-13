@@ -187,8 +187,9 @@ export async function leaveMatch(req: any, res: any) {
   const user2: string = await UserClass.findPlayerTwoByGame(req.body.id_game);
 
   if (
-    (req.user.email == user1 && leaveState == user2) ||
-    (req.user.email == user2 && leaveState == user1)
+    (req.user.email === user1 && leaveState === user2) ||
+    (req.user.email === user2 && leaveState === user1) ||
+    (req.user.email === user1 && user2 === "ai")
   ) {
     await updateGameAtributes(req.body.id_game, "Leave", "Leave Game", "Draw");
     const msg: string = controllerSuccessMsg(SuccEnum.SuccessDraw, res);
