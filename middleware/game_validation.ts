@@ -55,7 +55,7 @@ export async function isGameOver(req: any, res: any, next: any) {
       attributes: ["status"],
     }).then((game: any) => {
       console.log(game.status);
-      if (game.status === "Game Over") {
+      if (game.status !== "In progress") { //game is over or out of time 
         next(ErrEnum.ErrGameOver);
       } else {
         next();

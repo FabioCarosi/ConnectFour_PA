@@ -59,8 +59,16 @@ Move.addHook("afterCreate", async (move: any, options) => {
       );
       console.log("Now is turn of: ", currGame.playerOne);
     }
+    setTimeout(
+      async() =>  {
+       await checkLastHourMoves(move);
+     }, 3600000);
   });
+  
 });
+
+
+
 
 /*
 Finds all moves in a given game
@@ -69,34 +77,32 @@ Finds all moves in a given game
 export async function findMovesbyGame(idGame: any) {
   const allMoves = await Move.findAll({
     where: { id_game: idGame },
-    //attributes: ['column_move'],
     raw: true,
   });
 
   return allMoves;
 }
 
-export async function checkLastHourMoves(req: any) {
+//function that check how much time has passed from the latest move
+export async function checkLastHourMoves(move: any) {
   let dt = new Date();
 
   dt.setHours(dt.getHours() - 1);
-  console.log(dt);
+ 
 
   const latestMoves = await Move.findAll({
     where: {
-      id_game: req.body.id_game,
+      id_game: move.id_game,
       timestamp_move: {
-        [Op.gt]: dt,
+        [Op.gt]: dt, //find all moves made in the last hour
       },
     },
   });
   if (latestMoves.length === 0) {
-    const opponent = await UserClass.findWinnerOutTime(req.body.id_game);
-    await GameClass.updateGameOver(req.body.id_game, "OutOfTime");
-    await GameClass.updateWinner(req.body.id_game, opponent);
-
+    const opponent = await UserClass.findWinnerOutTime(move.id_game);
+    await GameClass.updateGameOver(move.id_game, "OutOfTime");
+    await GameClass.updateWinner(move.id_game, opponent);
+    console.log("Game out of time");
     return true;
-  } else {
-    return false;
-  }
+  } 
 }

@@ -1,10 +1,13 @@
 const { Connect4AI, Connect4 } = require("connect4-ai");
 
 import * as fs from "fs";
+import { ErrEnum } from "../Factory/ErrorFactory";
+import { SuccEnum, SuccessFactory } from "../Factory/SuccessFactory";
 import * as GameClass from "../models/game";
 import * as MoveClass from "../models/move";
 import * as UserClass from "../models/user";
 import { controllerErrorHandler } from "./controllerErrorHandler";
+import { controllerSuccessMsg } from "./controllerSuccessMessage";
 
 /*Function startGame allows to create a new Game 
   In request's body the user sends the email of the opponent player
@@ -12,7 +15,6 @@ import { controllerErrorHandler } from "./controllerErrorHandler";
 */
 export async function startGame(req: any, res: any): Promise<void> {
   try {
-    let newGame;
     req.body.playerOne = req.user.email; //playerOne in body's request is instantiated with the user's email in JWT payload
     let lessCredit = 0.35; //amount of credity that will be decreased to playerOne
     /*
@@ -24,17 +26,12 @@ export async function startGame(req: any, res: any): Promise<void> {
       UserClass.updateCredit(req.user.email, lessCredit);
       //successFactory --> credit has been successfully updated
 
-      if (game.playerTwo === "ai") {
-        newGame = new Connect4AI(); //create a game instance where the opponent is the AI
-      } else {
-        newGame = new Connect4(); //create a game instance with modality "UserVSUser"
-      }
-      console.log("You are playing against ", game.playerTwo);
-      //res.status(successMsg.msgStatus);
-      res.send("Game ID: " + game.id_game + "\n" + newGame.ascii());
+      const msg: string = controllerSuccessMsg(SuccEnum.SuccessNewGame, res);
+      res.send(msg + "\n" + "Game ID: " + game.id_game  
+                + "\n"+ "You are playing against "+ game.playerTwo);
     });
   } catch (err) {
-    controllerErrorHandler(err, res);
+      controllerErrorHandler(ErrEnum.GenericError, res);
   }
 }
 
@@ -46,19 +43,6 @@ export async function startGame(req: any, res: any): Promise<void> {
 export async function makeMove(req: any, res: any) {
   try {
     req.body.email = req.user.email; //email in body's request is instantiated with the user's email in JWT payload
-    /*
-    Here, a new Move istance is created in DB
-    */
-    
-    const savedMoves = await MoveClass.findMovesbyGame(req.body.id_game); //find all the moves of the game
-    if (savedMoves.length !== 0) {
-      //if there are moves
-      const bool = await MoveClass.checkLastHourMoves(req); //then check if there are moves in the last hour
-      if (bool) {
-        res.send("Game Over: You are out of time!");
-        return;
-      } //if there is not moves in the last hour the player is out of time
-    }
     
     const moveArr: number[] = []; //array where moves found in DB will be pushed
 
@@ -82,7 +66,7 @@ export async function makeMove(req: any, res: any) {
       newGame.play(req.body.column_move);
       await MoveClass.Move.create(req.body); //create and save the move in DB
     } catch (error) {
-        res.send("Move is not valid");
+        controllerErrorHandler(ErrEnum.ErrInvalidMove, res); //move is not valid
     }
     console.log(newGame.ascii());
     console.log(newGame.gameStatus());
@@ -107,17 +91,24 @@ export async function makeMove(req: any, res: any) {
         });
       }
     }
-    res.send(newGame.ascii());
-    //successMessage: a move has been made
+    
+    const msg: string = controllerSuccessMsg(SuccEnum.SuccessNewMove, res);
+    
     if (newGame.gameStatus().gameOver) {
-      GameClass.updateGameOver(req.body.id_game, "GameOver");
-      GameClass.updateWinnerByNumber(
+      await GameClass.updateGameOver(req.body.id_game, "GameOver");
+      const winner: string = await GameClass.updateWinnerByNumber(
         req.body.id_game,
         newGame.gameStatus().winner
       );
+      res.send(msg +"\n Game is over \n Winner is: "+ winner);
+      return;
+
     }
+    
+    res.send(msg + "\n" + newGame.ascii());
+
   } catch (err) {
-    controllerErrorHandler(err, res);
+      controllerErrorHandler(err, res);
   }
 }
 
@@ -196,11 +187,11 @@ export async function viewGamesByUser(req: any, res: any) {
       };
       gamesFiltered.push(body);
     }
-
-    res.send(gamesFiltered); //and success message
-    //res.status
+    const msg: string = controllerSuccessMsg(SuccEnum.SuccessViewGamesByUser, res);
+    res.send(msg + "\n" + gamesFiltered); 
+    
   } catch (err) {
-    controllerErrorHandler(err, res);
+    controllerErrorHandler(ErrEnum.GenericError, res);
   }
 }
 /*
@@ -223,15 +214,6 @@ export async function stateGame(req: any, res: any) {
     //find all moves corrisponding to id_game of current game
     const movesByGame: any = await MoveClass.findMovesbyGame(req.body.id_game);
 
-    if (movesByGame.length !== 0) {
-      //if there are moves
-      const bool = await MoveClass.checkLastHourMoves(req); //then check if there are moves in the last hour
-      if (bool) {
-        res.send("Game Over: You are out of time!");
-        return;
-      } //if there is not moves in the last hour the player is out of time
-    }
-
     movesByGame.forEach((el) => moveArr.push(el.column_move));
     console.log("Set of all moves: ", moveArr); //array of moves (columns) in the game
 
@@ -242,10 +224,11 @@ export async function stateGame(req: any, res: any) {
     });
 
     const table = newGame.ascii(); //table of game
-
+    const msg: string = controllerSuccessMsg(SuccEnum.SuccessViewStateGame, res);
     await GameClass.getGame(req.body.id_game).then((game: any) => {
       //get the informations of game
       res.send(
+        msg + "\n" +
         table +
           "\n\n Turn: " +
           game.turn +
@@ -258,7 +241,7 @@ export async function stateGame(req: any, res: any) {
       );
     });
   } catch (err) {
-    controllerErrorHandler(err, res);
+      controllerErrorHandler(err, res);
   }
 }
 
@@ -268,7 +251,8 @@ export async function chargeCredit(req: any, res: any) {
     const newCredit = req.body.newCredit;
     const emailUser = req.body.email;
     await UserClass.updateCredit(emailUser, -newCredit);
-    res.send("Credit has been updated"); //SuccessCreditUpdated
+    const msg: string = controllerSuccessMsg(SuccEnum.SuccessCreditUpdated, res);
+    res.send(msg); 
   } catch (err) {
     controllerErrorHandler(err, res);
   }
@@ -279,7 +263,6 @@ export async function getMovesList(req: any, res: any) {
   try {
     let stringMove;
     let separator = ",";
-    let i = 0;
     fs.writeFileSync("moves.json", "");
     const moves = await MoveClass.findMovesbyGame(req.body.id_game); //get all moves from DB
     if (req.body.format === "csv") {

@@ -1,6 +1,10 @@
 import { DataTypes, Op, Sequelize } from "sequelize";
 import { Singleton } from "./singletonDB";
 import * as UserClass from "./user";
+import * as MoveClass from "./move";
+import { controllerSuccessMsg } from "../controller/controllerSuccessMessage";
+import { ErrEnum } from "../Factory/ErrorFactory";
+import { SuccEnum, SuccessFactory } from "../Factory/SuccessFactory";
 
 const connection: Sequelize = Singleton.getInstance();
 
@@ -61,7 +65,11 @@ When playerOne creates the game, it is playerOne's turn
 */
 Game.addHook("afterCreate", async (game: any, options) => {
   await game.update({ status: "In progress", turn: game.playerOne });
+ 
 });
+
+
+
 
 export async function getGame(idGame) {
   const game = await Game.findByPk(idGame);
@@ -158,6 +166,7 @@ export async function updateWinnerByNumber(idGame, winner: number) {
   await updateWinner(idGame, email);
   return email;
 }
+
 export async function updateWinner(idGame, winnerEmail) {
   await Game.update(
     { winner: winnerEmail },
@@ -170,13 +179,11 @@ export async function updateWinner(idGame, winnerEmail) {
 }
 
 export async function leaveMatch(req: any, res: any) {
-  let gameFound;
 
   let leaveState: string = "";
 
-  const game = getGame(req.body.id_game);
-  gameFound = game;
-  leaveState = gameFound.leaveState;
+  const game: any = await getGame(req.body.id_game);
+  leaveState = game.leaveState;
 
   const user1: string = await UserClass.findPlayerOneByGame(req.body.id_game);
 
@@ -198,7 +205,8 @@ export async function leaveMatch(req: any, res: any) {
         },
       }
     );
-    res.send("Game Over - Draw");
+    const msg: string = controllerSuccessMsg(SuccEnum.SuccessDraw, res);
+    res.send(msg); 
   } else if (req.user.email == user1 && leaveState !== user2) {
     await Game.update(
       { leaveState: user1 },
@@ -208,7 +216,8 @@ export async function leaveMatch(req: any, res: any) {
         },
       }
     );
-    res.send("Draw request saved");
+    const msg: string = controllerSuccessMsg(SuccEnum.SuccessDrawRequest, res);
+    res.send(msg); 
   } else if (req.user.email == user2 && leaveState !== user1) {
     await Game.update(
       { leaveState: user2 },
@@ -218,6 +227,7 @@ export async function leaveMatch(req: any, res: any) {
         },
       }
     );
-    res.send("Draw request saved");
+    const msg: string = controllerSuccessMsg(SuccEnum.SuccessDrawRequest, res);
+    res.send(msg); 
   }
 }

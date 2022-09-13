@@ -148,6 +148,16 @@ class ErrGetFormat implements Message {
   }
 }
 
+class ErrInvalidMove implements Message {
+  getMsg(): { msgString: string; msgStatus: number } {
+    return {
+      msgStatus: StatusCode.ClientErrorConflict, //409
+      //The request is valid and correct, but there are conflicts with application logic
+      msgString: "The move you want to make is not valid",
+    };
+  }
+}
+
 export enum ErrEnum {
   GenericError,
   NoAuthHeader,
@@ -164,6 +174,7 @@ export enum ErrEnum {
   ErrGameOver,
   ErrBodyFormat,
   ErrGetFormat,
+  ErrInvalidMove
 }
 
 export class ErrorFactory {
@@ -215,6 +226,9 @@ export class ErrorFactory {
         break;
       case ErrEnum.ErrGetFormat:
         msgError = new ErrGetFormat();
+        break;
+      case ErrEnum.ErrInvalidMove:
+        msgError = new ErrInvalidMove();
         break;
       default:
         msgError = new GenericError();

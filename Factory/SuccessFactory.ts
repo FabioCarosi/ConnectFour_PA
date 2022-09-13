@@ -72,6 +72,15 @@ class SuccessDownload implements Message{
     }
 }
 
+class SuccessViewStateGame implements Message {
+    getMsg():{msgString: string, msgStatus: number}{
+        return{
+        msgStatus : StatusCode.SuccessOK, //200
+        msgString: "Your request to view state of the game was successful"
+        }
+    }
+}
+
 export enum SuccEnum {
     SuccessGeneric,
     SuccessNewGame,
@@ -79,7 +88,8 @@ export enum SuccEnum {
     SuccessNewMove,
     SuccessViewGamesByUser,
     SuccessDrawRequest,
-    SuccessDraw
+    SuccessDraw,
+    SuccessViewStateGame
 }
 
 export class SuccessFactory {
@@ -108,6 +118,8 @@ export class SuccessFactory {
             case SuccEnum.SuccessDraw:
                 msgSuccess = new SuccessDraw();
                 break;
+            case SuccEnum.SuccessViewStateGame:
+                msgSuccess = new SuccessViewStateGame();
             default:
                 msgSuccess = new SuccessGeneric();
                 break;
