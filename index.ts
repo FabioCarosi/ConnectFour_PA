@@ -18,14 +18,6 @@ var myLogger = function (req, res, next) {
 app.use(myLogger);
 app.use(chain.JwtValidation);
 
-app.get("/", (req, res) => {
-  res.send("Hello");
-});
-
-app.get("/test", (req, res) => {
-  res.send("Hello Fabio");
-});
-
 //This root allows to start a new game
 app.post("/startGame", chain.gameValidation, (req, res) => {
   controller.startGame(req, res);
