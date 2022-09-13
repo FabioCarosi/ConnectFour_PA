@@ -1,8 +1,8 @@
-const { Connect4AI, Connect4 } = require("connect4-ai");
+const { Connect4AI } = require("connect4-ai");
 
 import * as fs from "fs";
 import { ErrEnum } from "../Factory/ErrorFactory";
-import { SuccEnum, SuccessFactory } from "../Factory/SuccessFactory";
+import { SuccEnum } from "../Factory/SuccessFactory";
 import * as GameClass from "../models/game";
 import * as MoveClass from "../models/move";
 import * as UserClass from "../models/user";
@@ -67,6 +67,7 @@ export async function makeMove(req: any, res: any) {
       await MoveClass.Move.create(req.body); //create and save the move in DB
     } catch (error) {
         controllerErrorHandler(ErrEnum.ErrInvalidMove, res); //move is not valid
+        return;
     }
     console.log(newGame.ascii());
     console.log(newGame.gameStatus());
@@ -77,13 +78,14 @@ export async function makeMove(req: any, res: any) {
       const difficulty: string = await GameClass.getDifficulty(
         req.body.id_game
       );
-      const play: any = newGame.playAI(difficulty); //ai plays
-      console.log("Ai has played column: ", play);
-      console.log(newGame.ascii());
-      console.log(newGame.gameStatus());
+      
 
       //create AI move in db if game is not over
       if (!newGame.gameStatus().gameOver) {
+        const play: any = newGame.playAI(difficulty); //ai plays
+        console.log("Ai has played column: ", play);
+        console.log(newGame.ascii());
+        console.log(newGame.gameStatus());
         await MoveClass.Move.create({
           id_game: req.body.id_game,
           email: "ai",
@@ -100,7 +102,7 @@ export async function makeMove(req: any, res: any) {
         req.body.id_game,
         newGame.gameStatus().winner
       );
-      res.send(msg +"\n Game is over \n Winner is: "+ winner);
+      res.send(msg +"\n Game is over \n Winner is: "+ winner + "\n" + newGame.ascii());
       return;
 
     }
@@ -188,7 +190,8 @@ export async function viewGamesByUser(req: any, res: any) {
       gamesFiltered.push(body);
     }
     const msg: string = controllerSuccessMsg(SuccEnum.SuccessViewGamesByUser, res);
-    res.send(msg + "\n" + gamesFiltered); 
+    console.log(gamesFiltered);
+    res.send(gamesFiltered);  
     
   } catch (err) {
     controllerErrorHandler(ErrEnum.GenericError, res);

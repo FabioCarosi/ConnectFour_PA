@@ -5,6 +5,7 @@ import * as UserClass from "./user";
 
 const connection: Sequelize = Singleton.getInstance();
 
+
 export const Move = connection.define(
   "move",
   {
@@ -38,20 +39,20 @@ export const Move = connection.define(
 
 /*Once that a move is made, the game's turn changes to the next player*/
 Move.addHook("afterCreate", async (move: any, options) => {
-  await GameClass.Game.findOne({
+  const currGame: any = await GameClass.Game.findOne({
     where: { id_game: move.id_game },
-  }).then((currGame: any) => {
-    if (currGame.turn === currGame.playerOne) {
-      GameClass.Game.update(
+  });
+  if (currGame.turn === currGame.playerOne) {
+      await GameClass.Game.update(
         { turn: currGame.playerTwo },
         {
           where: { id_game: move.id_game },
         }
       );
       console.log("Now is turn of: ", currGame.playerTwo);
-      UserClass.updateCredit(currGame.playerOne, 0.01);
-    } else {
-      GameClass.Game.update(
+      await UserClass.updateCredit(currGame.playerOne, 0.01);
+  } else {
+      await GameClass.Game.update(
         { turn: currGame.playerOne },
         {
           where: { id_game: move.id_game },
@@ -59,13 +60,12 @@ Move.addHook("afterCreate", async (move: any, options) => {
       );
       console.log("Now is turn of: ", currGame.playerOne);
     }
-    setTimeout(
+    setTimeout( //set Timeout of 1h, then check if there has been moves since then
       async() =>  {
        await checkLastHourMoves(move);
-     }, 3600000);
+     }, 3600000); 
   });
   
-});
 
 
 
@@ -88,7 +88,7 @@ export async function checkLastHourMoves(move: any) {
   let dt = new Date();
 
   dt.setHours(dt.getHours() - 1);
- 
+  
 
   const latestMoves = await Move.findAll({
     where: {

@@ -19,7 +19,7 @@ export async function checkGameExistence(req: any, res: any, next: any) {
   }
 }
 
-//funzione che verifica l'esistenza del secondo utente nel payload dell'invio della richiesta di una nuova partita
+//check if the player that the user wants to play against, exists in DB
 export async function checkPlayerTwoExistence(req: any, res: any, next: any) {
   try {
     const userTwo = req.body.playerTwo;
@@ -37,7 +37,9 @@ export async function checkPlayerTwoExistence(req: any, res: any, next: any) {
     next(ErrEnum.GenericError);
   }
 }
-
+//this adapter is used when admin whant to charge user's credit
+//The next middleware is checkPlayerExistence, that take in input "req.body.playerTwo"
+//In this case, in our request's body there's "req.body.email", so we have to convert it in order to make the next middleware work
 export async function adapterCheckPlayerTwo(req: any, res: any, next: any) {
   try {
     req.body.playerTwo = req.body.email;
@@ -47,7 +49,9 @@ export async function adapterCheckPlayerTwo(req: any, res: any, next: any) {
   }
 }
 
-//restituisce errore se lo stato della partita è gameOver
+
+//check if id_game specified corrisponds to a game "In progress"
+//If game is over, that middleware returns error
 export async function isGameOver(req: any, res: any, next: any) {
   try {
     await GameClass.Game.findOne({
@@ -65,3 +69,5 @@ export async function isGameOver(req: any, res: any, next: any) {
     next(ErrEnum.GenericError);
   }
 }
+
+

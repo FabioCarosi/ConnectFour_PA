@@ -4,6 +4,10 @@ import * as Jwt from "./Jwt";
 import * as validErrHandler from "./validationErrorHandler";
 import * as view from "./view_validation";
 
+/*
+  Chain of responsability
+*/
+
 export const JwtValidation = [
   Jwt.requestTime,
   Jwt.checkHeader,
@@ -13,6 +17,7 @@ export const JwtValidation = [
   validErrHandler.validErrorHandler,
 ];
 
+//chain for validation of /startGame root
 export const gameValidation = [
   body.gameBodyValidation,
   Jwt.checkUserExistence,
@@ -22,6 +27,8 @@ export const gameValidation = [
   Jwt.checkUserCredit,
   validErrHandler.validErrorHandler,
 ];
+
+//chain for validation of /makeMove root
 export const moveValidation = [
   body.moveBodyValidation,
   Jwt.checkUserExistence,
@@ -31,7 +38,10 @@ export const moveValidation = [
   Jwt.isYourCurrentTurn,
   validErrHandler.validErrorHandler,
 ];
+
+//chain for validation of /leaveGame root
 export const leaveValidation = [
+  body.leaveBodyValidation,
   Jwt.checkUserExistence,
   game.checkGameExistence,
   Jwt.checkAuthMove,
@@ -39,19 +49,24 @@ export const leaveValidation = [
   validErrHandler.validErrorHandler,
 ];
 
+//chain for validation of /viewGamesByUser root
 export const viewValidation = [
   Jwt.checkUserExistence,
   view.checkGetFormat,
   validErrHandler.validErrorHandler,
 ];
 
+//chain for validation of /stateGame root
 export const stateValidation = [
+  body.leaveBodyValidation,
   Jwt.checkAuthMove,
   game.checkGameExistence,
   validErrHandler.validErrorHandler,
 ];
 
+//chain for validation of /chargeCredit root
 export const chargeValidation = [
+  body.chargeCreditBodyValidation,
   Jwt.checkUserExistence,
   Jwt.authAdmin,
   game.adapterCheckPlayerTwo,
@@ -59,7 +74,9 @@ export const chargeValidation = [
   validErrHandler.validErrorHandler,
 ];
 
+//chain for validation of //allMoves root
 export const listValidation = [
+  body.listBodyValidation,
   Jwt.checkUserExistence,
   game.checkGameExistence,
   validErrHandler.validErrorHandler,

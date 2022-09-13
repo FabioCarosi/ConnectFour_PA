@@ -26,41 +26,37 @@ app.get("/test", (req, res) => {
   res.send("Hello Fabio");
 });
 
-//This root allows to start a new game if it's possible
-//aggiungi middleware di validation per iniziare la partita (utenti esistenti, partita già esistente, ...)
-
+//This root allows to start a new game
 app.post("/startGame", chain.gameValidation, (req, res) => {
   controller.startGame(req, res);
 });
 
 //This root allows to make a move in the corrisponding game
-
 app.post("/makeMove", chain.moveValidation, (req, res) => {
   controller.makeMove(req, res);
 });
 
+//This root allows to make request for leave a game 
 app.post("/leaveGame", chain.leaveValidation, (req, res) => {
   controller.leaveGame(req, res);
 });
 
-//rotta per l’utente con ruolo admin che consenta di effettuare la ricarica per un utente
-//fornendo la mail ed il nuovo “credito” (sempre mediante JWT). I token JWT devono contenere i dati essenziali.
-//app.get('/chargeCredit',);
-
+//This root allows to view the state of a game 
 app.post("/stateGame", chain.stateValidation, (req, res) => {
   controller.stateGame(req, res);
 });
 
-//Questa rotta permette all'admin di aggiornare il credito di un utente
+//This root allows the admin to charge user's credit
 app.post("/chargeCredit", chain.chargeValidation, (req, res) => {
   controller.chargeCredit(req, res);
 });
 
-//Questa rotta permette di visualizzare le partite svolte da un dato utente
+//This root allows to view all games played by a user
 app.get("/viewGamesByUser", chain.viewValidation, (req, res) => {
   controller.viewGamesByUser(req, res);
 });
 
+//This root allows to download the list of moves in csv or json format
 app.post("/allMoves", chain.listValidation, (req, res) => {
   controller.getMovesList(req, res).then( () => {
     let path = "/usr/src/app/moves." + req.body.format;

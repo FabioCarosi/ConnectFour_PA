@@ -47,7 +47,7 @@ export function verifyAndAuthenticate(req, res, next) {
   }
 }
 
-enum role {
+enum role { //role can only be admin or player
   Admin = "admin",
   Player = "player",
 }
@@ -61,7 +61,7 @@ export function checkFormatJwt(req: any, res: any, next: any) {
       (userRoleLower === role.Admin || userRoleLower === role.Player) &&
       typeof userEmail === "string" &&
       typeof userRole === "string" &&
-      userEmail !== "ai";
+      userEmail !== "ai"; //user in payload cannot be "ai"
     if (isRight) {
       next();
     } else {
@@ -72,7 +72,7 @@ export function checkFormatJwt(req: any, res: any, next: any) {
   }
 }
 
-//verifica che il ruolo sia Admin
+//validation middleware that is called whenever the user must be admin
 export async function authAdmin(req: any, res: any, next: any) {
   try {
     const myRole = req.user.role;
@@ -87,7 +87,7 @@ export async function authAdmin(req: any, res: any, next: any) {
   }
 }
 
-//check if exist a game active for the user that sends the request
+//check if exist a game active for the user that sends the request and for the second player the user wants to play against
 export async function checkExistingGame(req: any, res: any, next: any) {
   try {
     const userReq = req.user.email;
@@ -95,26 +95,26 @@ export async function checkExistingGame(req: any, res: any, next: any) {
     let playerTwoInGame: boolean = false;
 
     await GameClass.Game.findAll({
-      where: { status: "In progress" },
+      where: { status: "In progress" }, //find all games that are in progress (so they are not over yet)
     }).then((gameActive: any) => {
       if (gameActive.length === 0) {
         console.log("You can play");
         next();
       } else {
         gameActive.forEach((el) => {
-          if (el.playerOne == userReq || el.playerTwo == userReq) {
-            isInGame = true;
+          if (el.playerOne == userReq || el.playerTwo == userReq) { 
+            isInGame = true; //user who sends the request is already in an active game
           } else {
             if (
-              (el.playerOne == req.body.playerTwo ||
+              (el.playerOne == req.body.playerTwo || 
                 el.playerTwo == req.body.playerTwo) &&
-              req.body.playerTwo !== "ai"
+              req.body.playerTwo !== "ai" //The ai can be in multiple active games
             ) {
-              playerTwoInGame = true;
+              playerTwoInGame = true; //the second player is already in an active game
             }
           }
         });
-        if (isInGame || playerTwoInGame) {
+        if (isInGame || playerTwoInGame) { //if one of the player is active in another game, you can't create a new game 
           next(ErrEnum.ErrExistingGame);
         } else {
           next();
@@ -126,8 +126,7 @@ export async function checkExistingGame(req: any, res: any, next: any) {
   }
 }
 
-//funzione per verificarre se l'utente nel playload esiste nel db
-
+//check if user in payload exists in DB
 export async function checkUserExistence(req: any, res: any, next: any) {
   try {
     const userReq = req.user.email;
@@ -145,7 +144,7 @@ export async function checkUserExistence(req: any, res: any, next: any) {
   }
 }
 
-//funzione che verifica la validità dell'utente che invia la richiesta di partita
+//check if who sends the request is not equal to second player
 export async function verifyUserTwo(req: any, res: any, next: any) {
   try {
     const userReq = req.user.email;
@@ -160,7 +159,7 @@ export async function verifyUserTwo(req: any, res: any, next: any) {
   }
 }
 
-//funzione per verificare il credito sufficiente dell'utente che invia la richiesta di gioco
+//check if user has enough credit to play
 export async function checkUserCredit(req: any, res: any, next: any) {
   try {
     const userReq = req.user.email;
@@ -177,7 +176,8 @@ export async function checkUserCredit(req: any, res: any, next: any) {
   }
 }
 
-//funzione per verificare se l'utente che manda la mossa è quello specificato in game.turn
+//check if the user that sends the move is the one specified in game.turn
+//In other words, check if is the turn of who sends the move
 export async function isYourCurrentTurn(req: any, res: any, next: any) {
   try {
     const userReq = req.user.email;
@@ -195,7 +195,7 @@ export async function isYourCurrentTurn(req: any, res: any, next: any) {
   }
 }
 
-//funzione per assicurare che solo i 2 player del gioco inviino la mossa
+//check that only the two players in the game (playerOne and playerTwo) can send moves in that game
 export async function checkAuthMove(req: any, res: any, next: any) {
   try {
     await GameClass.Game.findOne({

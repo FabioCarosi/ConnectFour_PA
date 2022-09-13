@@ -1,13 +1,15 @@
 import { ErrEnum } from "../Factory/ErrorFactory";
 
+//check the format of the request's url 
+//this is only for /viewGamesByUser root
 export async function checkGetFormat(req: any, res: any, next: any) {
   try {
     const typeRequest = req.query.take;
 
     enum types {
       between = "between",
-      greater = "greaterThan",
-      less = "lessThan",
+      greater = "greaterthan",
+      less = "lessthan",
     }
     const typeRequestLower = typeRequest.toLowerCase();
     if (

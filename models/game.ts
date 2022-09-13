@@ -76,6 +76,7 @@ export async function getGame(idGame) {
   return game;
 }
 
+//find games between the two dates specified
 export async function getGameByDateBetween(player, myFirstDate, mySecondDate) {
   let totalGames: any = [];
   await Game.findAll({
@@ -99,7 +100,7 @@ export async function getGameByDateBetween(player, myFirstDate, mySecondDate) {
   return totalGames;
 }
 
-//prende tutte le partite di un certo giocatore oltre una certa data
+//find games after a certain date
 export async function getGameByDateGraterThan(player, myDate) {
   let totalGames: any = [];
 
@@ -118,7 +119,7 @@ export async function getGameByDateGraterThan(player, myDate) {
   return totalGames;
 }
 
-//prende tutte le partite di un certo giocatore prima di una certa data
+//find games before a certain date
 export async function getGameByDateLessThan(player, myDate) {
   let totalGames: any = [];
   await Game.findAll({
@@ -136,6 +137,7 @@ export async function getGameByDateLessThan(player, myDate) {
   return totalGames;
 }
 
+//find game's difficulty
 export async function getDifficulty(idGame: any) {
   const game: any = await Game.findOne({
     where: { id_game: idGame },
@@ -145,6 +147,7 @@ export async function getDifficulty(idGame: any) {
   return difficulty;
 }
 
+//update game's status 
 export async function updateGameOver(idGame, status) {
   await Game.update(
     { status: status },
@@ -155,6 +158,7 @@ export async function updateGameOver(idGame, status) {
     }
   );
 }
+
 export async function updateWinnerByNumber(idGame, winner: number) {
   let email: string = "";
   if (winner === 1) {
@@ -167,6 +171,7 @@ export async function updateWinnerByNumber(idGame, winner: number) {
   return email;
 }
 
+//update game's winner
 export async function updateWinner(idGame, winnerEmail) {
   await Game.update(
     { winner: winnerEmail },
@@ -178,6 +183,8 @@ export async function updateWinner(idGame, winnerEmail) {
   );
 }
 
+//function that allows a player to make a draw request
+//if both player has accepted draw, then game's status is updated in "Draw"
 export async function leaveMatch(req: any, res: any) {
 
   let leaveState: string = "";

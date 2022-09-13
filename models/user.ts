@@ -25,7 +25,7 @@ export const User = connection.define(
   }
 );
 
-//funzione che trova il playerOne del game
+//find playerOne of a game
 export async function findPlayerOneByGame(idGame) {
   const game: any = await GameClass.Game.findOne({
     where: { id_game: idGame },
@@ -35,6 +35,7 @@ export async function findPlayerOneByGame(idGame) {
   return user;
 }
 
+//find playerTwo of a game
 export async function findPlayerTwoByGame(idGame) {
   const game: any = await GameClass.Game.findOne({
     where: { id_game: idGame },
@@ -44,6 +45,7 @@ export async function findPlayerTwoByGame(idGame) {
   return user;
 }
 
+//find the current turn of a game
 export async function findPlayerTurn(idGame) {
   const game: any = await GameClass.Game.findOne({
     where: { id_game: idGame },
@@ -53,7 +55,7 @@ export async function findPlayerTurn(idGame) {
   return user;
 }
 
-//funzione che restituisce il credito dell'utente
+//find user's credit
 export async function getCredit(emailUser: string) {
   const user: any = await User.findOne({
     where: { email: emailUser },
@@ -64,7 +66,8 @@ export async function getCredit(emailUser: string) {
   return credit;
 }
 
-//funzione che aggiorna il credito dell'utente quando inizia il gioco
+
+//update user's credit
 export async function updateCredit(emailUser, lessCredit) {
   await User.increment(
     { credit: -lessCredit },
