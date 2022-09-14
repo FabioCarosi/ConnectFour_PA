@@ -72,7 +72,7 @@ In Docker, è stato utilizzato un ulteriore strumento chiamato Adminer, che ha p
 
 ## Diagramma d’uso
 
-![Diagramma_uso](/utils/Diagramma casi d'uso.png)
+![Diagramma_uso](utils/Diagramma casi d'uso.png)
 
 ---
 
