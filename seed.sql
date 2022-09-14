@@ -55,7 +55,9 @@ INSERT INTO game (id_game, playerOne, playerTwo, status, startTime, winner, turn
 (1,	'player1@email.com',	'player2@email.com',	'Game Over',	'2022-09-04 09:14:08',	'player1@email.com',	'player2@email.com',	'medium',	'Game Over'),
 (2,	'player3@email.com',	'ai',	'Game Over',	'2022-09-04 09:15:45',	'ai',	'player3@email.com',	'medium',	'Game Over'),
 (3,	'adriano@email.com',	'luca@email.com',	'Game Over',	'2022-09-04 09:16:31',	'Draw',	'adriano@email.com',	'medium',	'Game Over'),
-(4,	'fabio@email.com',	'cristina@email.com',	'Game Abandoned',	'2022-09-04 09:18:27',	'Draw',	'fabio@email.com',	'medium',	'Game Abandoned');
+(4,	'fabio@email.com',	'cristina@email.com',	'Game Abandoned',	'2022-09-04 09:18:27',	'Draw',	'fabio@email.com',	'medium',	'Game Abandoned'),
+(5,	'fabio@email.com',	'ai',	'In Progress',	'2022-09-14 12:56:26',	'No Winner',	'fabio@email.com',	'easy',	'In Progress');
+
 
 INSERT INTO move (id_move, id_game, email, column_move, timestamp_move) VALUES
 (1,	1,	'player1@email.com',	2,	'2022-09-14 12:51:53'),
@@ -160,4 +162,6 @@ INSERT INTO move (id_move, id_game, email, column_move, timestamp_move) VALUES
 (100,	3,	'adriano@email.com',	3,	'2022-09-14 13:19:16'),
 (101,	3,	'luca@email.com',	4,	'2022-09-14 13:19:19'),
 (102,	3,	'adriano@email.com',	3,	'2022-09-14 13:38:35'),
-(103,	3,	'luca@email.com',	4,	'2022-09-14 13:38:38');
+(103,	3,	'luca@email.com',	4,	'2022-09-14 13:38:38'),
+(104,	5,	'fabio@email.com',	2,	'2022-09-14 12:56:51'),
+(105,	5,	'ai',	1,	'2022-09-14 12:56:52');
