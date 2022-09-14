@@ -111,10 +111,19 @@ export async function makeMove(req: any, res: any) {
     const msg: string = controllerSuccessMsg(SuccEnum.SuccessNewMove, res);
 
     if (newGame.gameStatus().gameOver) {
-      const winner: string = await GameClass.winnerByNumber(
-        req.body.id_game,
-        newGame.gameStatus().winner
-      );
+      let numWinner = newGame.gameStatus().winner;
+      let winner: string = strings.noWinner;
+
+      if (numWinner !== 1 || numWinner !== 2) {
+        //if winner is not 1 or 2 the game is draw
+        winner = strings.draw; //then winner is set to Draw
+      } else {
+        winner = await GameClass.winnerByNumber(
+          req.body.id_game,
+          newGame.gameStatus().winner
+        );
+      }
+
       await GameClass.updateGameAttributes(
         req.body.id_game,
         strings.gameOver,
