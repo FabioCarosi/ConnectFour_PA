@@ -1,8 +1,8 @@
 # Connect Four
 
-## Progetto Programmazione Avanzata: Connect4
+## Progetto Programmazione Avanzata
 
-### **Contenuti**
+### **Indice**
 
 * [Autori](#autor)
 * [Obiettivo del progetto](#obiettivo)
@@ -210,7 +210,7 @@ Utente contro IA:
 
 ```
 A new game has started
-Game ID: 6
+Game ID: 1
 You are playing against player2@email.com
 ```
 
@@ -233,7 +233,7 @@ Di seguito viene mostrato un esempio di payload valido nel body della richiesta 
 
 ```
 A move has been made
- Game ID: 6
+ Game ID: 1
 
  -  -  -  -  -  -  -
  -  -  -  -  -  -  -
@@ -452,4 +452,43 @@ Model-View-Controller è un pattern architetturale. In questo progetto non è st
 
 ---
 <a name="avvio"></a>
-#Avvio dell'applicazione
+# Avvio dell'applicazione
+
+- Per avviare l’applicazione è necessario avere l’ambiente Docker installato sulla propria macchina
+- Clonare la repository da terminale tramite il comando:
+
+```
+git clone https://github.com/FabioCarosi/ConnectFour_PA.git
+```
+
+- Spostarsi all’interno della cartella appena creata
+- Creare un file `.env` con la seguente struttura:
+
+```
+SECRET_KEY = connectfourkey
+MYSQL_USER=user
+MYSQL_ROOT_PASSWORD=password
+MYSQL_PASSWORD=password
+MYSQL_DATABASE=connectfour
+MYSQL_PORT=3306
+MYSQL_HOST=db
+MYSQL_ALLOW_EMPTY_PASSWORD=no
+```
+
+- Eseguire all’interno della cartella del progetto il comando da terminale:
+
+```
+docker-compose up
+```
+
+- L’applicazione è accessibile all’indirizzo `localhost:8080`, mentre all’indirizzo `localhost:8082` è accessibile lo strumento Adminer per la visualizzazione del database.
+
+## Test
+
+Per il testing è possibile importare all’interno della piattaforma Postman il file `GameTest.json` in cui  è stato inserito un insieme degli scenari possibili.
+
+---
+
+### Ringraziamenti
+
+W001260 - Prof. **Adriano Mancini** - Programmazione Avanzata
