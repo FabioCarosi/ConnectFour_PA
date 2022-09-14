@@ -1,16 +1,26 @@
 # Connect Four
 
-# Progetto Programmazione Avanzata: Connect4
+## Progetto Programmazione Avanzata: Connect4
+
+### **Contenuti **
+
+* [Autori](#autor)
+* [Obiettivo del progetto](#obiettivo)
+* [Diagrammi UML](#diagrammi)
+* [Rotte](#rotte)
+* [Pattern](#pattern)
+* [Avvio dell'applicazione](#avvio)
+
 
 ---
-
-## Gruppo
+<a name="autor"></a>
+## Autori
 
 - [Carosi Fabio](https://github.com/FabioCarosi)
 - [Rossetti Cristina](https://github.com/CristinaRossetti)
 
 ---
-
+<a name="obiettivo"></a>
 ## Obiettivo del progetto
 
 L’obiettivo principale del progetto consiste nella realizzazione di un servizio back-end per la gestione del gioco del “_forza4_” (_connect four_).
@@ -38,7 +48,7 @@ In particolare, sono richieste le seguenti specifiche per l’implementazione de
 
 ---
 
-## Strumenti
+### Strumenti
 
 Sono stati utilizzati i seguenti strumenti per l’implementazione del servizio:
 
@@ -50,14 +60,14 @@ In Docker, è stato utilizzato un ulteriore strumento chiamato Adminer, che ha p
 
 ---
 
-## Linguaggi
+### Linguaggi
 
 - TypeScript
 - SQL
 
 ---
 
-## Librerie/Framework
+### Librerie/Framework
 
 - [NodeJS](https://nodejs.org/it/)
 - [Connect4-AI](https://github.com/DaveTrost/connect4-ai)
@@ -69,12 +79,13 @@ In Docker, è stato utilizzato un ulteriore strumento chiamato Adminer, che ha p
 - [status-code-enum](https://www.npmjs.com/package/status-code-enum)
 
 ---
+<a name="diagrammi"></a>
+#Diagrammi
 
-## Diagramma d’uso
+## Diagramma dei casi d’uso
 
 ![casiUso](utils/useCase.png)
 
----
 
 ## Diagrammi delle sequenze
 
@@ -106,7 +117,6 @@ In Docker, è stato utilizzato un ulteriore strumento chiamato Adminer, che ha p
 
 ![viewGameByUser](utils/viewGameByUser.png)
 
----
 
 ## Modello ER
 
@@ -148,7 +158,10 @@ In Docker, è stato utilizzato un ulteriore strumento chiamato Adminer, che ha p
 | credit    | Credito dell’utente |
 | role      | Ruolo dell’utente   |
 
-## Richieste
+---
+
+<a name="rotte"></a>
+# Richieste
 
 | Rotta            | Tipo | Autenticazione JWT |
 | ---------------- | ---- | ------------------ |
@@ -415,8 +428,8 @@ player1@email.com,5,Wed Sep 14 2022 14:58:23 GMT+0200 (Central European Summer T
 ```
 
 ---
-
-## Pattern Utilizzati
+<a name="pattern"></a>
+# Pattern Utilizzati
 
 ### Singleton
 
@@ -436,3 +449,7 @@ In questo progetto, questo pattern viene utilizzato per la creazione dei diversi
 ### Model - Controller
 
 Model-View-Controller è un pattern architetturale. In questo progetto non è stata implementata la View, ma solamente la parte di back-end. Il Model ha permesso di gestire tutto il DB e le operazioni su di esso, mentre la componente di Controller ha consentito la gestione dell’interazione dell’utente con l’applicazione, ovvero tutte le funzioni che vengono chiamate una volta che viene richiamata una certa rotta.
+
+---
+<a name="avvio"></a>
+#Avvio dell'applicazione
