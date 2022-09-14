@@ -1,6 +1,6 @@
 export const gameOver: string = "Game Over";
 export const outOfTime: string = "Out Of Time";
-export const leaveGame: string = "Game Abandoned";
+export const leaveGame: string = "Game Stopped";
 export const created: string = "Created";
 export const currentPlayer: string = "Current Player";
 

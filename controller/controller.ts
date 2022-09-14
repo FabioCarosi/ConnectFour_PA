@@ -245,7 +245,9 @@ export async function stateGame(req: any, res: any) {
     let moveArr: number[] = [];
     //find all moves corrisponding to id_game of current game
     const movesByGame: any = await MoveClass.findMovesbyGame(req.body.id_game);
-    if (movesByGame.length !== 0) {
+    const game: any = await GameClass.getGame(req.body.id_game);
+    const status: string = game.status;
+    if (movesByGame.length !== 0 && status === strings.inProgress) {
       //if there are moves
       const bool = await MoveClass.checkLastHourMoves(req); //then check if there are moves in the last hour
       if (bool) {

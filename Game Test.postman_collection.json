@@ -239,7 +239,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"id_game\": 5,\r\n    \"column_move\":2\r\n}",
+              "raw": "{\r\n    \"id_game\": 6,\r\n    \"column_move\":2\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -340,7 +340,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"id_game\": 5,\r\n    \"column_move\":1\r\n}",
+              "raw": "{\r\n    \"id_game\": 6,\r\n    \"column_move\":1\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -374,7 +374,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"id_game\":2,\r\n    \"column_move\":5\r\n}",
+              "raw": "{\r\n    \"id_game\":7,\r\n    \"column_move\":5\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -408,7 +408,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"id_game\": 1,\r\n    \"column_move\":10\r\n}",
+              "raw": "{\r\n    \"id_game\": 6,\r\n    \"column_move\":10\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -511,7 +511,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBsYXllcjFAZW1haWwuY29tIiwicm9sZSI6InBsYXllciJ9.feP94-1R3x9cdWd51gY6PHV2HvFefjNgsC0NnNCnmK4",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkcmlhbm9AZW1haWwuY29tIiwicm9sZSI6ImFkbWluIn0.L18Ja_dc323ESj-b6T1i91HtV6lA-fiAFlKhrgUIRNA",
                   "type": "string"
                 }
               ]
@@ -520,7 +520,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n   \"playerTwo\":\"player4@email.com\"\r\n}",
+              "raw": "{\r\n   \"playerTwo\":\"luca@email.com\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -544,7 +544,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBsYXllcjFAZW1haWwuY29tIiwicm9sZSI6InBsYXllciJ9.feP94-1R3x9cdWd51gY6PHV2HvFefjNgsC0NnNCnmK4",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkcmlhbm9AZW1haWwuY29tIiwicm9sZSI6ImFkbWluIn0.L18Ja_dc323ESj-b6T1i91HtV6lA-fiAFlKhrgUIRNA",
                   "type": "string"
                 }
               ]
@@ -553,7 +553,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"id_game\":4\r\n}",
+              "raw": "{\r\n    \"id_game\":8\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -578,7 +578,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBsYXllcjRAZW1haWwuY29tIiwicm9sZSI6InBsYXllciJ9.xvO_O0NeLLDku274a8NEA-DJxehcvkd0inbjFbb96ig",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imx1Y2FAZW1haWwuY29tIiwicm9sZSI6ImFkbWluIn0.e34xyLTznNnfpnznC0Cs2tcouvXW_-HLtARNdERw718",
                   "type": "string"
                 }
               ]
@@ -587,7 +587,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"id_game\":4\r\n}",
+              "raw": "{\r\n    \"id_game\":8\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -655,7 +655,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"id_game\":5\r\n}",
+              "raw": "{\r\n    \"id_game\":9\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -694,7 +694,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"id_game\":1\r\n}",
+              "raw": "{\r\n    \"id_game\":6\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -915,7 +915,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"id_game\":1,\r\n    \"format\":\"json\"\r\n}",
+              "raw": "{\r\n    \"id_game\":1,\r\n    \"format\":\"csv\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
