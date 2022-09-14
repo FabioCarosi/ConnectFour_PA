@@ -26,12 +26,12 @@ app.post("/makeMove", chain.moveValidation, (req, res) => {
   controller.makeMove(req, res);
 });
 
-//This root allows to make request for leave a game 
+//This root allows to make request for leave a game
 app.post("/leaveGame", chain.leaveValidation, (req, res) => {
   controller.leaveGame(req, res);
 });
 
-//This root allows to view the state of a game 
+//This root allows to view the state of a game
 app.post("/stateGame", chain.stateValidation, (req, res) => {
   controller.stateGame(req, res);
 });
@@ -48,12 +48,11 @@ app.get("/viewGamesByUser", chain.viewValidation, (req, res) => {
 
 //This root allows to download the list of moves in csv or json format
 app.post("/allMoves", chain.listValidation, (req, res) => {
-  controller.getMovesList(req, res).then( () => {
+  controller.getMovesList(req, res).then(() => {
     let path = "/usr/src/app/moves." + req.body.format;
-    res.download(path); 
-  })
-  
- });
+    res.download(path);
+  });
+});
 
 app.post('*', chain.rootValidation); //gives back an error due to invalid root
 

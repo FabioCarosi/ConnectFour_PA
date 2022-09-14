@@ -66,7 +66,6 @@ export async function getCredit(emailUser: string) {
   return credit;
 }
 
-
 //update user's credit
 export async function updateCredit(emailUser, lessCredit) {
   await User.increment(
