@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "3cef9904-d34a-4583-b9fd-21e0dbf0feeb",
+		"_postman_id": "0ee6f9d1-73c4-4cef-be14-dc8f2e5ded36",
 		"name": "Game Test",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "14236211"
@@ -472,6 +472,43 @@
 						"description": "This request shows that an error occurs when player tries to send an invalid column.  \nIn column_move we must insert a number between 0 and 6. All the other values are considered as invalid."
 					},
 					"response": []
+				},
+				{
+					"name": "outOfTimeMove",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZhYmlvQGVtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiJ9.0ZnCvjP9qFDSrb0bBE7Fm3oyI4fGVIuSLJcaEB-qqec",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_game\": 5,\r\n    \"column_move\":3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/makeMove",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"makeMove"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -804,7 +841,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBsYXllcjFAZW1haWwuY29tIiwicm9sZSI6InBsYXllciJ9.feP94-1R3x9cdWd51gY6PHV2HvFefjNgsC0NnNCnmK4",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZhYmlvQGVtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiJ9.0ZnCvjP9qFDSrb0bBE7Fm3oyI4fGVIuSLJcaEB-qqec",
 									"type": "string"
 								}
 							]
@@ -847,7 +884,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBsYXllcjFAZW1haWwuY29tIiwicm9sZSI6InBsYXllciJ9.feP94-1R3x9cdWd51gY6PHV2HvFefjNgsC0NnNCnmK4",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZhYmlvQGVtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiJ9.0ZnCvjP9qFDSrb0bBE7Fm3oyI4fGVIuSLJcaEB-qqec",
 									"type": "string"
 								}
 							]
@@ -855,7 +892,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/viewGamesByUser?take=greaterThan&date=2022-09-14",
+							"raw": "localhost:8080/viewGamesByUser?take=greaterThan&date=2021-09-02",
 							"host": [
 								"localhost"
 							],
@@ -870,7 +907,7 @@
 								},
 								{
 									"key": "date",
-									"value": "2022-09-14"
+									"value": "2021-09-02"
 								}
 							]
 						},
@@ -886,7 +923,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBsYXllcjFAZW1haWwuY29tIiwicm9sZSI6InBsYXllciJ9.feP94-1R3x9cdWd51gY6PHV2HvFefjNgsC0NnNCnmK4",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZhYmlvQGVtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiJ9.0ZnCvjP9qFDSrb0bBE7Fm3oyI4fGVIuSLJcaEB-qqec",
 									"type": "string"
 								}
 							]
@@ -894,7 +931,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/viewGamesByUser?take=lessThan&date=2022-09-16",
+							"raw": "localhost:8080/viewGamesByUser?take=lessThan&date=2022-09-30",
 							"host": [
 								"localhost"
 							],
@@ -909,7 +946,7 @@
 								},
 								{
 									"key": "date",
-									"value": "2022-09-16"
+									"value": "2022-09-30"
 								}
 							]
 						},
