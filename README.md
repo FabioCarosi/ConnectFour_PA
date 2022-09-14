@@ -485,7 +485,7 @@ docker-compose up
 
 ## Test
 
-Per il testing è possibile importare all’interno della piattaforma Postman il file `GameTest.json` in cui  è stato inserito un insieme degli scenari possibili.
+Per il testing è possibile importare all’interno della piattaforma Postman il file `GameTest.json` in cui  è stato inserito un insieme degli scenari possibili. Si consiglia di seguire l'ordine in cui sono presentate le rotte in modo da evitare possibili conflitti con i dati già presenti nel database.
 
 ---
 
