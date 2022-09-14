@@ -21,7 +21,7 @@ CREATE TABLE game (
   winner varchar(50) DEFAULT 'No Winner',
   turn varchar(50) NOT NULL DEFAULT 'Current Player',
   difficulty varchar(10) DEFAULT 'medium',
-  leaveState varchar(50) DEFAULT 'In progress',
+  leaveState varchar(50) DEFAULT 'In Progress',
   PRIMARY KEY (id_game)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -51,3 +51,8 @@ INSERT INTO user (email, credit, role) VALUES
 ('playerNoCredit@email.com', 0.25 , 'player');
 
 
+INSERT INTO game (id_game, playerOne, playerTwo, status, startTime, winner, turn, difficulty, leaveState) VALUES
+(1,	'player1@email.com',	'player2@email.com',	'In Progress',	'2022-09-04 09:14:08',	'No Winner',	'player1@email.com',	'medium',	'In Progress'),
+(2,	'player3@email.com',	'ai',	'In Progress',	'2022-09-04 09:15:45',	'No Winner',	'player3@email.com',	'medium',	'In Progress'),
+(3,	'adriano@email.com',	'luca@email.com',	'In Progress',	'2022-09-04 09:16:31',	'No Winner',	'adriano@email.com',	'medium',	'In Progress'),
+(4,	'fabio@email.com',	'cristina@email.com',	'Game Abandoned',	'2022-09-04 09:18:27',	'Draw',	'fabio@email.com',	'medium',	'Game Abandoned');
