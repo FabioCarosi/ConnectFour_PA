@@ -6,8 +6,8 @@
 
 ## Gruppo
 
-- Carosi Fabio(https://github.com/FabioCarosi)
-- Rossetti Cristina(https://github.com/CristinaRossetti)
+- [Carosi Fabio](https://github.com/FabioCarosi)
+- [Rossetti Cristina](https://github.com/CristinaRossetti)
 
 ---
 
@@ -59,14 +59,14 @@ In Docker, è stato utilizzato un ulteriore strumento chiamato Adminer, che ha p
 
 ## Librerie/Framework
 
-- NodeJS(https://nodejs.org/it/)
-- Connect4-AI(https://github.com/DaveTrost/connect4-ai)
-- Express(https://expressjs.com/it/starter/installing.html)
-- MySQL(https://www.mysql.com/it/)
-- Sequelize(https://sequelize.org/)
-- Dotenv(https://www.npmjs.com/package/dotenv)
-- Jsonwebtoken(https://www.npmjs.com/package/jsonwebtoken)
-- status-code-enum(https://www.npmjs.com/package/status-code-enum)
+- [NodeJS](https://nodejs.org/it/)
+- [Connect4-AI](https://github.com/DaveTrost/connect4-ai)
+- [Express](https://expressjs.com/it/starter/installing.html)
+- [MySQL](https://www.mysql.com/it/)
+- [Sequelize](https://sequelize.org/)
+- [Dotenv](https://www.npmjs.com/package/dotenv)
+- [Jsonwebtoken](https://www.npmjs.com/package/status-code-enum)
+- [status-code-enum](https://www.npmjs.com/package/status-code-enum)
 
 ---
 
