@@ -60,7 +60,7 @@ In Docker, è stato utilizzato un ulteriore strumento chiamato Adminer, che ha p
 ## Librerie/Framework
 
 - NodeJS(https://nodejs.org/it/)
-- [Connect4-AI](https://github.com/DaveTrost/connect4-ai)
+- Connect4-AI(https://github.com/DaveTrost/connect4-ai)
 - Express(https://expressjs.com/it/starter/installing.html)
 - MySQL(https://www.mysql.com/it/)
 - Sequelize(https://sequelize.org/)
