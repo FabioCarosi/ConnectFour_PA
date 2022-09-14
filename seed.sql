@@ -47,6 +47,7 @@ INSERT INTO user (email, credit, role) VALUES
 ('fabio@email.com', 100, 'admin'),
 ('cristina@email.com', 100, 'admin'),
 ('adriano@email.com', 100, 'admin'),
-('luca@email.com', 100, 'admin');
+('luca@email.com', 100, 'admin'),
+('playerNoCredit@email.com', 0.25 , 'player');
 
 
