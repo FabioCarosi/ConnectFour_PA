@@ -2,7 +2,7 @@
 
 ## Progetto Programmazione Avanzata: Connect4
 
-### **Contenuti **
+### **Contenuti**
 
 * [Autori](#autor)
 * [Obiettivo del progetto](#obiettivo)
@@ -14,14 +14,14 @@
 
 ---
 <a name="autor"></a>
-## Autori
+### Autori
 
 - [Carosi Fabio](https://github.com/FabioCarosi)
 - [Rossetti Cristina](https://github.com/CristinaRossetti)
 
 ---
 <a name="obiettivo"></a>
-## Obiettivo del progetto
+# Obiettivo del progetto
 
 L’obiettivo principale del progetto consiste nella realizzazione di un servizio back-end per la gestione del gioco del “_forza4_” (_connect four_).
 L’applicazione prevede la possibilità di interagire con due tipologie di utenti:
@@ -80,7 +80,7 @@ In Docker, è stato utilizzato un ulteriore strumento chiamato Adminer, che ha p
 
 ---
 <a name="diagrammi"></a>
-#Diagrammi
+# Diagrammi
 
 ## Diagramma dei casi d’uso
 
