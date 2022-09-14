@@ -42,10 +42,8 @@ export function verifyAndAuthenticate(req, res, next) {
   try {
     let decoded = jwt.verify(req.token, process.env.SECRET_KEY);
     if (decoded !== null) {
-      if (decoded.role === strings.admin || decoded.role === strings.player) {
-        req.user = decoded;
-        next();
-      }
+      req.user = decoded;
+      next();
     }
   } catch (err) {
     next(ErrEnum.ErrKeyToken);
