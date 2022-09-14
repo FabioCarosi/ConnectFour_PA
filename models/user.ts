@@ -83,3 +83,11 @@ export async function findWinnerOutTime(idGame) {
   if (turn === user1) return user2;
   if (turn === user2) return user1;
 }
+
+export async function findUserAdmin(emailUser) {
+  const user: any = await User.findOne({
+    where: { email: emailUser },
+  });
+  const role: string = user.role;
+  return role;
+}

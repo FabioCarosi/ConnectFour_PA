@@ -153,7 +153,7 @@ export async function viewGamesByUser(req: any, res: any) {
     const userReq = req.user.email;
     let totalGames: any = []; //array where games found in DB will be pushed
 
-    if (req.query.take === strings.between) {
+    if (req.query.take.toLowerCase() === strings.between) {
       //user wants a range of dates
       //localhost:8080/viewGamesByUser?take=between&dateOne=2020-09-08&dateTwo=2022-09-10
       totalGames = await GameClass.getGameByDateBetween(
@@ -161,7 +161,7 @@ export async function viewGamesByUser(req: any, res: any) {
         req.query.dateOne,
         req.query.dateTwo
       );
-    } else if (req.query.take === strings.greaterThan) {
+    } else if (req.query.take.toLowerCase() === strings.greaterThan) {
       //user wants games from a certain date on
       //localhost:8080/viewGamesByUser?take=greaterThan&date=2020-09-08
       console.log(req.query.date);
@@ -169,7 +169,7 @@ export async function viewGamesByUser(req: any, res: any) {
         userReq,
         req.query.date
       );
-    } else if (req.query.take === strings.lessThan) {
+    } else if (req.query.take.toLowerCase() === strings.lessThan) {
       //user wants games before a certain date
       //localhost:8080/viewGamesByUser?take=lessThan&date=2020-09-08
       totalGames = await GameClass.getGameByDateLessThan(

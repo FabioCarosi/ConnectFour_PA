@@ -16,8 +16,8 @@ export const draw: string = "Draw";
 export const noWinner: string = "No Winner";
 
 export const between: string = "between";
-export const greaterThan: string = "greaterThan";
-export const lessThan: string = "lessThan";
+export const greaterThan: string = "greaterthan";
+export const lessThan: string = "lessthan";
 
 export const yes: string = "Yes";
 export const no: string = "No";

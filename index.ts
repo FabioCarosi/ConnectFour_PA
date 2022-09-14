@@ -2,7 +2,6 @@ var express = require("express");
 import * as controller from "./controller/controller";
 import * as chain from "./middleware/chain";
 import * as strings from "./strings";
-var download = require("downloadjs");
 
 const PORT = 8080;
 const HOST = "0.0.0.0";

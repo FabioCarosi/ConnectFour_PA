@@ -41,8 +41,12 @@ export function checkToken(req, res, next) {
 export function verifyAndAuthenticate(req, res, next) {
   try {
     let decoded = jwt.verify(req.token, process.env.SECRET_KEY);
-    if (decoded !== null) req.user = decoded;
-    next();
+    if (decoded !== null) {
+      if (decoded.role === strings.admin || decoded.role === strings.player) {
+        req.user = decoded;
+        next();
+      }
+    }
   } catch (err) {
     next(ErrEnum.ErrKeyToken);
   }
@@ -72,7 +76,8 @@ export function checkFormatJwt(req: any, res: any, next: any) {
 export async function authAdmin(req: any, res: any, next: any) {
   try {
     const myRole = req.user.role.toLowerCase();
-    if (myRole === strings.admin) {
+    const dbRole = await UserClass.findUserAdmin(req.user.email);
+    if (myRole === strings.admin && dbRole.toLowerCase() === strings.admin) {
       next();
     } else {
       next(ErrEnum.NoAuth);
