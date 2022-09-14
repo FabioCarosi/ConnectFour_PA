@@ -1,4 +1,4 @@
-# Connect4
+# Connect Four
 
 # Progetto Programmazione Avanzata: Connect4
 
@@ -6,8 +6,8 @@
 
 ## Gruppo
 
-- Carosi Fabio
-- Rossetti Cristina
+- Carosi Fabio(https://github.com/FabioCarosi)
+- Rossetti Cristina(https://github.com/CristinaRossetti)
 
 ---
 
@@ -59,20 +59,20 @@ In Docker, è stato utilizzato un ulteriore strumento chiamato Adminer, che ha p
 
 ## Librerie/Framework
 
-- NodeJS
+- NodeJS(https://nodejs.org/it/)
 - [Connect4-AI](https://github.com/DaveTrost/connect4-ai)
-- Express
-- MySQL
-- Sequelize
-- Dotenv
-- Jsonwebtoken
-- status-code-enum
+- Express(https://expressjs.com/it/starter/installing.html)
+- MySQL(https://www.mysql.com/it/)
+- Sequelize(https://sequelize.org/)
+- Dotenv(https://www.npmjs.com/package/dotenv)
+- Jsonwebtoken(https://www.npmjs.com/package/jsonwebtoken)
+- status-code-enum(https://www.npmjs.com/package/status-code-enum)
 
 ---
 
 ## Diagramma d’uso
 
-![Diagramma_uso](utils/Diagramma casi d'uso.png)
+![casiUso](utils/useCase.png)
 
 ---
 
@@ -80,37 +80,37 @@ In Docker, è stato utilizzato un ulteriore strumento chiamato Adminer, che ha p
 
 ### Creazione di una nuova partita
 
-![Untitled](README%20md%20c65e06489540453e88e4c089dfa13c1b/Untitled%201.png)
+![createGame](utils/createGame.png)
 
 ### Invio di una mossa
 
-![Untitled](README%20md%20c65e06489540453e88e4c089dfa13c1b/Untitled%202.png)
+![makeMove](utils/makeMove.png)
 
 ### Abbandono di una partita
 
-![Untitled](README%20md%20c65e06489540453e88e4c089dfa13c1b/Untitled%203.png)
+![leaveGame](utils/leaveGame.png)
 
 ### Visualizzare lo stato di una data partita
 
-![Untitled](README%20md%20c65e06489540453e88e4c089dfa13c1b/Untitled%204.png)
+![stateGame](utils/stateGame.png)
 
 ### Ricarica il credito di un utente
 
-![Untitled](README%20md%20c65e06489540453e88e4c089dfa13c1b/Untitled%205.png)
+![chargeCredit](utils/chargeCredit.png)
 
 ### Restituire lo storico delle mosse
 
-![Untitled](README%20md%20c65e06489540453e88e4c089dfa13c1b/Untitled%206.png)
+![allMoves](utils/allMoves.png)
 
 ### Visualizza le partite svolte da un utente
 
-![Untitled](README%20md%20c65e06489540453e88e4c089dfa13c1b/Untitled%207.png)
+![viewGameByUser](utils/viewGameByUser.png)
 
 ---
 
 ## Modello ER
 
-![Untitled](README%20md%20c65e06489540453e88e4c089dfa13c1b/Untitled%208.png)
+![ModelloER](utils/ModelloER.png)
 
 ---
 
@@ -170,7 +170,8 @@ Token JWT valido (email: “player1@email.com”, role:”Player”)
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBsYXllcjFAZW1haWwuY29tIiwicm9sZSI6IlBsYXllciJ9.4TSKRRuefHcsiBqIr2ISMyCdGsE8K96hO9BunIpnvkc
 ```
 
-**/startGame**
+### **/startGame**
+
 Questa rotta permette la creazione di una nuova partita. Dopo aver verificato la correttezza del body della richiesta, si controlla l’esistenza dell’utente che invia la richiesta e del player contro cui l’utente vuole giocare (se la modalità è User VS User), si controlla che l’utente non invii la richiesta a sé stesso, che l’utente non sia già attivo in una partita in corso e infine che l’utente abbia il credito sufficiente per creare una nuova partita.
 Quando viene creata una nuova partita, il suo stato viene settato a “In progress” e il turno è del giocatore che ha inviato la richiesta.
 
@@ -192,7 +193,16 @@ Utente contro IA:
 }
 ```
 
-**/makeMove**
+**Response:**
+
+```
+A new game has started
+Game ID: 6
+You are playing against player2@email.com
+```
+
+### **/makeMove**
+
 Questa rotta permette l’invio di una mossa verso il gioco corretto. Dopo aver verificato la correttezza del body della richiesta, si controlla l’esistenza dell’utente che invia la richiesta e del gioco specificato nel body della richiesta. Si verifica anche se l’utente ha l’autorizzazione per inviare la mossa, ovvero se la sua email corrisponde ad uno dei due player memorizzati nell’istanza Game del DB. Si verifica, inoltre, che l’id_game specificato corrisponda ad una partita “In progress”, cioè non terminata. Infine, viene verificato che l’utente sia coincidente con il turno corrente nell’istanza Game del DB.
 Quando si sta giocando contro l’intelligenza artificiale, nel momento in cui l’utente invia la mossa, l’IA risponde automaticamente e viene memorizzata la sua mossa nel DB.
 Quando viene inviata una nuova mossa, e quindi viene creata una nuova istanza di Move nel DB, viene cambiato il turno in Game al giocatore successivo e viene fatto partire un timer di 1h per far sì che, se dopo questo lasso di tempo non c’è nessuna mossa, viene abbandonata automaticamente la partita.
@@ -206,7 +216,24 @@ Di seguito viene mostrato un esempio di payload valido nel body della richiesta 
 }
 ```
 
-**/leaveGame**
+**Response:**
+
+```
+A move has been made
+ Game ID: 6
+
+ -  -  -  -  -  -  -
+ -  -  -  -  -  -  -
+ -  -  -  -  -  -  -
+ -  -  -  -  -  -  -
+ -  -  -  -  -  -  -
+ -  -  1  -  -  -  -
+---------------------
+[0][1][2][3][4][5][6]
+```
+
+### **/leaveGame**
+
 Questa rotta permette l’invio della richiesta di abbandono della partita. Dopo aver verificato la correttezza del body della richiesta, si controlla l’esistenza dell’utente che invia la richiesta e del gioco specificato nel body della richiesta. Si verifica che solo gli utenti che partecipano alla partita possono inviare la richiesta di abbandono. Inoltre, l’id_game specificato nel body della richiesta deve corrispondere ad una partita in corso, e non terminata.
 
 Di seguito viene mostrato un esempio di payload valido nel body della richiesta in formato JSON:
@@ -217,7 +244,18 @@ Di seguito viene mostrato un esempio di payload valido nel body della richiesta 
 }
 ```
 
-**/stateGame**
+**Response:**
+
+```
+Your request to draw the games has been successfully sent
+```
+
+```
+Game Stopped - Draw
+```
+
+### **/stateGame**
+
 Questa rotta permette di visualizzare lo stato di una data partita, ovvero di chi è il turno, se la partita è terminata e in quale eventuale modo. Dopo aver verificato la correttezza del body della richiesta, si controlla l’esistenza dell’utente che invia la richiesta e del gioco specificato nel body della richiesta.
 
 Di seguito viene mostrato un esempio di payload valido nel body della richiesta in formato JSON:
@@ -228,7 +266,28 @@ Di seguito viene mostrato un esempio di payload valido nel body della richiesta 
 }
 ```
 
-**/chargeCredit**
+**Response:**
+
+```
+Successful HTTP request
+
+ -  -  -  -  -  -  -
+ -  -  -  -  -  -  -
+ -  -  -  -  -  -  -
+ -  -  -  -  -  -  -
+ -  -  -  -  -  -  -
+ -  2  1  -  -  -  -
+---------------------
+[0][1][2][3][4][5][6]
+
+ Turn: player1@email.com
+ Status: In Progress
+ Winner: No Winner
+ Draw request: In Progress
+```
+
+### **/chargeCredit**
+
 Questa rotta permette all’admin di ricaricare il credito di un utente. Dopo aver verificato la correttezza del body della richiesta, si controlla l’esistenza dell’utente che invia la richiesta e dell’utente a cui si vuole ricaricare il credito. Inoltre, si controlla se l’utente che invia la richiesta ha l’autorizzazione necessaria, ovvero è un admin.
 
 Di seguito viene mostrato un esempio di payload valido nel body della richiesta in formato JSON:
@@ -240,7 +299,14 @@ Di seguito viene mostrato un esempio di payload valido nel body della richiesta 
 }
 ```
 
-**/viewGamesByUser**
+**Response:**
+
+```
+Credit has been updated
+```
+
+### **/viewGamesByUser**
+
 Questa rotta permette di ottenere la lista di tutte le partite svolte da un determinato utente. Si controlla l’esistenza dell’utente che invia la richiesta e si valida il formato dell’url della richiesta di tipo GET. L’URL ha il seguente formato:
 
 - Partite comprese in un certo intervallo:
@@ -261,7 +327,29 @@ localhost:8080/viewGamesByUser?take=greaterThan&date=2022-09-14
 localhost:8080/viewGamesByUser?take=lessThan&date=2022-09-16
 ```
 
-**/allMoves**
+**Response:**
+
+```
+[
+    {
+        "id_game": 1,
+        "won": "Yes",
+        "modality": "User VS User",
+        "numberOfMoves": 35,
+        "date": "2022-09-04T09:14:08.000Z"
+    },
+    {
+        "id_game": 6,
+        "won": "No",
+        "modality": "User VS User",
+        "numberOfMoves": 2,
+        "date": "2022-09-14T14:24:22.000Z"
+    }
+]
+```
+
+### **/allMoves**
+
 Questa rotta permette di scaricare in formato JSON o CSV la lista di tutte le mosse di una certa partita. Dopo aver verificato la correttezza del body della richiesta, si controlla l’esistenza dell’utente che invia la richiesta e del gioco specificato nel body della richiesta.
 
 Di seguito viene mostrato un esempio di payload valido nel body della richiesta in formato JSON:
@@ -284,6 +372,48 @@ Formato CSV
 }
 ```
 
+**Response:**
+
+```
+[
+    {
+        "id_move": 1,
+        "id_game": 1,
+        "email": "player1@email.com",
+        "column_move": 2,
+        "timestamp_move": "2022-09-14T12:51:53.000Z"
+    },
+   [...]
+    {
+        "id_move": 34,
+        "id_game": 1,
+        "email": "player2@email.com",
+        "column_move": 5,
+        "timestamp_move": "2022-09-14T12:58:21.000Z"
+    },
+    {
+        "id_move": 35,
+        "id_game": 1,
+        "email": "player1@email.com",
+        "column_move": 5,
+        "timestamp_move": "2022-09-14T12:58:23.000Z"
+    }
+]
+```
+
+```
+sep = ,
+Player,Move,Time
+player1@email.com,2,Wed Sep 14 2022 14:51:53 GMT+0200 (Central European Summer Time)
+player2@email.com,3,Wed Sep 14 2022 14:52:09 GMT+0200 (Central European Summer Time)
+player1@email.com,0,Wed Sep 14 2022 14:52:50 GMT+0200 (Central European Summer Time)
+player2@email.com,2,Wed Sep 14 2022 14:53:07 GMT+0200 (Central European Summer Time)
+player1@email.com,0,Wed Sep 14 2022 14:53:23 GMT+0200 (Central European Summer Time)
+[...]
+player2@email.com,5,Wed Sep 14 2022 14:58:21 GMT+0200 (Central European Summer Time)
+player1@email.com,5,Wed Sep 14 2022 14:58:23 GMT+0200 (Central European Summer Time)
+```
+
 ---
 
 ## Pattern Utilizzati
@@ -291,8 +421,6 @@ Formato CSV
 ### Singleton
 
 Il Singleton è un design pattern creazionale che assicura che una classe abbia una sola istanza, mantenendo un accesso globale a quella istanza. In questo progetto, il Singleton è utilizzato per assicurare che ci sia un’unica istanza di connessione al DB. Nel momento in cui, quindi, viene richiamata la connessione, questa, se non esiste, viene creata, altrimenti viene richiamata quella esistente.
-
-![Untitled](README%20md%20c65e06489540453e88e4c089dfa13c1b/Untitled%209.png)
 
 ### Chain of Responsability
 
