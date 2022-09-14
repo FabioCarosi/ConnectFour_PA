@@ -18,10 +18,10 @@ CREATE TABLE game (
   playerTwo varchar(50) NOT NULL,
   status varchar(50) NOT NULL DEFAULT 'Created',
   startTime timestamp NOT NULL DEFAULT current_timestamp(),
-  winner varchar(50) DEFAULT NULL,
-  turn varchar(50) NOT NULL DEFAULT 'current player',
+  winner varchar(50) DEFAULT 'No Winner',
+  turn varchar(50) NOT NULL DEFAULT 'Current Player',
   difficulty varchar(10) DEFAULT 'medium',
-  leaveState varchar(50) DEFAULT 'InProgress',
+  leaveState varchar(50) DEFAULT 'In progress',
   PRIMARY KEY (id_game)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -46,7 +46,7 @@ INSERT INTO user (email, credit, role) VALUES
 ('player4@email.com', 100, 'player'),
 ('fabio@email.com', 100, 'admin'),
 ('cristina@email.com', 100, 'admin'),
-('adriano@email.com', 100, 'admin'),
+('adriano@email.com',100, 'admin'),
 ('luca@email.com', 100, 'admin'),
 ('playerNoCredit@email.com', 0.25 , 'player');
 

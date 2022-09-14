@@ -1,7 +1,8 @@
-require('dotenv').config();
+require("dotenv").config();
 import { ErrEnum } from "../Factory/ErrorFactory";
 import * as GameClass from "../models/game";
 import * as UserClass from "../models/user";
+import * as strings from "../strings";
 const jwt = require("jsonwebtoken");
 
 export var requestTime = function (req, res, next) {
@@ -47,21 +48,16 @@ export function verifyAndAuthenticate(req, res, next) {
   }
 }
 
-enum role { //role can only be admin or player
-  Admin = "admin",
-  Player = "player",
-}
 //check the right format of payload jwt
 export function checkFormatJwt(req: any, res: any, next: any) {
   try {
-    const userRole = req.user.role;
-    const userEmail = req.user.email;
-    const userRoleLower = userRole.toLowerCase();
+    const userRole = req.user.role.toLowerCase();
+    const userEmail = req.user.email.toLowerCase();
     const isRight: boolean =
-      (userRoleLower === role.Admin || userRoleLower === role.Player) &&
+      (userRole === strings.admin || userRole === strings.player) &&
       typeof userEmail === "string" &&
       typeof userRole === "string" &&
-      userEmail !== "ai"; //user in payload cannot be "ai"
+      userEmail !== strings.ai; //user in payload cannot be "ai"
     if (isRight) {
       next();
     } else {
@@ -75,9 +71,8 @@ export function checkFormatJwt(req: any, res: any, next: any) {
 //validation middleware that is called whenever the user must be admin
 export async function authAdmin(req: any, res: any, next: any) {
   try {
-    const myRole = req.user.role;
-    const myRoleLower = myRole.toLowerCase();
-    if (myRole === role.Admin) {
+    const myRole = req.user.role.toLowerCase();
+    if (myRole === strings.admin) {
       next();
     } else {
       next(ErrEnum.NoAuth);
@@ -95,26 +90,27 @@ export async function checkExistingGame(req: any, res: any, next: any) {
     let playerTwoInGame: boolean = false;
 
     await GameClass.Game.findAll({
-      where: { status: "In progress" }, //find all games that are in progress (so they are not over yet)
+      where: { status: strings.inProgress }, //find all games that are in progress (so they are not over yet)
     }).then((gameActive: any) => {
       if (gameActive.length === 0) {
         console.log("You can play");
         next();
       } else {
         gameActive.forEach((el) => {
-          if (el.playerOne == userReq || el.playerTwo == userReq) { 
+          if (el.playerOne == userReq || el.playerTwo == userReq) {
             isInGame = true; //user who sends the request is already in an active game
           } else {
             if (
-              (el.playerOne == req.body.playerTwo || 
+              (el.playerOne == req.body.playerTwo ||
                 el.playerTwo == req.body.playerTwo) &&
-              req.body.playerTwo !== "ai" //The ai can be in multiple active games
+              req.body.playerTwo !== strings.ai //The ai can be in multiple active games
             ) {
               playerTwoInGame = true; //the second player is already in an active game
             }
           }
         });
-        if (isInGame || playerTwoInGame) { //if one of the player is active in another game, you can't create a new game 
+        if (isInGame || playerTwoInGame) {
+          //if one of the player is active in another game, you can't create a new game
           next(ErrEnum.ErrExistingGame);
         } else {
           next();

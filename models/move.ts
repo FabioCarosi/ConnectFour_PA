@@ -1,4 +1,5 @@
 import { DataTypes, Op, Sequelize } from "sequelize";
+import * as strings from "../strings";
 import * as GameClass from "./game";
 import { Singleton } from "./singletonDB";
 import * as UserClass from "./user";
@@ -98,9 +99,12 @@ export async function checkLastHourMoves(req: any) {
   });
   if (latestMoves.length === 0) {
     const opponent = await UserClass.findWinnerOutTime(req.body.id_game);
-    await GameClass.updateGameOver(req.body.id_game, "OutOfTime");
-    await GameClass.updateWinner(req.body.id_game, opponent);
-
+    await GameClass.updateGameAttributes(
+      req.body.id_game,
+      strings.outOfTime,
+      strings.outOfTime,
+      opponent
+    );
     return true;
   } else {
     return false;

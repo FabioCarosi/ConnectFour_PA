@@ -1,6 +1,7 @@
 import { DataTypes, Op, Sequelize } from "sequelize";
 import { controllerSuccessMsg } from "../controller/controllerSuccessMessage";
 import { SuccEnum } from "../Factory/SuccessFactory";
+import * as strings from "../strings";
 import { Singleton } from "./singletonDB";
 import * as UserClass from "./user";
 
@@ -24,7 +25,7 @@ export const Game = connection.define(
     },
     status: {
       type: DataTypes.STRING(),
-      defaultValue: "Created",
+      defaultValue: strings.created,
       allowNull: false,
     },
     startTime: {
@@ -34,22 +35,22 @@ export const Game = connection.define(
     },
     winner: {
       type: DataTypes.STRING(),
-      defaultValue: "none",
+      defaultValue: strings.noWinner,
       allowNull: false,
     },
     turn: {
       type: DataTypes.STRING(),
-      defaultValue: "current player",
+      defaultValue: strings.currentPlayer,
       allowNull: false,
     },
     difficulty: {
       type: DataTypes.STRING(),
       allowNull: true,
-      defaultValue: "medium",
+      defaultValue: strings.medium,
     },
     leaveState: {
       type: DataTypes.STRING(),
-      defaultValue: "InProgress",
+      defaultValue: strings.inProgress,
     },
   },
   {
@@ -62,7 +63,7 @@ update game status in "In progress" when a new game is created
 When playerOne creates the game, it is playerOne's turn
 */
 Game.addHook("afterCreate", async (game: any, options) => {
-  await game.update({ status: "In progress", turn: game.playerOne });
+  await game.update({ status: strings.inProgress, turn: game.playerOne });
 });
 
 export async function getGame(idGame) {
@@ -141,19 +142,7 @@ export async function getDifficulty(idGame: any) {
   return difficulty;
 }
 
-//update game's status
-export async function updateGameOver(idGame, status) {
-  await Game.update(
-    { status: status },
-    {
-      where: {
-        id_game: idGame,
-      },
-    }
-  );
-}
-
-export async function updateWinnerByNumber(idGame, winner: number) {
+export async function winnerByNumber(idGame, winner: number) {
   let email: string = "";
   if (winner === 1) {
     email = await UserClass.findPlayerOneByGame(idGame);
@@ -161,20 +150,7 @@ export async function updateWinnerByNumber(idGame, winner: number) {
   if (winner === 2) {
     email = await UserClass.findPlayerTwoByGame(idGame);
   }
-  await updateWinner(idGame, email);
   return email;
-}
-
-//update game's winner
-export async function updateWinner(idGame, winnerEmail) {
-  await Game.update(
-    { winner: winnerEmail },
-    {
-      where: {
-        id_game: idGame,
-      },
-    }
-  );
 }
 
 //function that allows a player to make a draw request
@@ -187,29 +163,45 @@ export async function leaveMatch(req: any, res: any) {
   const user2: string = await UserClass.findPlayerTwoByGame(req.body.id_game);
 
   if (
-    (req.user.email === user1 && leaveState === user2) ||
+    (req.user.email === user1 && leaveState === user2) || //if the other player has already requested abandonment
     (req.user.email === user2 && leaveState === user1) ||
-    (req.user.email === user1 && user2 === "ai")
+    (req.user.email === user1 && user2 === strings.ai) //or if the second player is AI
   ) {
-    await updateGameAtributes(req.body.id_game, "Leave", "Leave Game", "Draw");
+    await updateGameAttributes(
+      //then modify the attributes of the game to end it
+      req.body.id_game,
+      strings.leaveGame,
+      strings.leaveGame,
+      strings.draw
+    );
     const msg: string = controllerSuccessMsg(SuccEnum.SuccessDraw, res);
     res.send(msg);
   } else if (req.user.email == user1 && leaveState !== user2) {
-    await updateGameAtributes(req.body.id_game, user1);
+    //if only the player one sent the request to abandon the game
+    await updateGameAttributes(req.body.id_game, user1); //then save the request of the player one
     const msg: string = controllerSuccessMsg(SuccEnum.SuccessDrawRequest, res);
     res.send(msg);
   } else if (req.user.email == user2 && leaveState !== user1) {
-    await updateGameAtributes(req.body.id_game, user2);
+    //if only the player two sent the request to abandon the game
+    await updateGameAttributes(req.body.id_game, user2); //then save the request of the player two
     const msg: string = controllerSuccessMsg(SuccEnum.SuccessDrawRequest, res);
     res.send(msg);
   }
 }
 
-async function updateGameAtributes(
+/*
+function to update game attributes
+@params: 
+idGame = id of the game to update, 
+leaveState: status of the draw request,
+status: status of the game,
+winner: email of winner user
+*/
+export async function updateGameAttributes(
   idGame: number,
-  leaveState: string = "InProgress",
-  status: string = "In progress",
-  winner: string = "none"
+  leaveState: string = strings.inProgress, //default = In Progress
+  status: string = strings.inProgress, //default = In Progress
+  winner: string = strings.noWinner //default = No Winner
 ) {
   Game.update(
     {

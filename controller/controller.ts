@@ -6,6 +6,7 @@ import { SuccEnum } from "../Factory/SuccessFactory";
 import * as GameClass from "../models/game";
 import * as MoveClass from "../models/move";
 import * as UserClass from "../models/user";
+import * as strings from "../strings";
 import { controllerErrorHandler } from "./controllerErrorHandler";
 import { controllerSuccessMsg } from "./controllerSuccessMessage";
 
@@ -17,6 +18,8 @@ export async function startGame(req: any, res: any): Promise<void> {
   try {
     req.body.playerOne = req.user.email; //playerOne in body's request is instantiated with the user's email in JWT payload
     let lessCredit = 0.35; //amount of credity that will be decreased to playerOne
+    if (req.body.playerTwo === strings.AI) req.body.playerTwo = strings.ai;
+
     /*
     Here, a new Game istance is created in DB
     */
@@ -86,11 +89,9 @@ export async function makeMove(req: any, res: any) {
       controllerErrorHandler(ErrEnum.ErrInvalidMove, res); //move is not valid
       return;
     }
-    console.log(newGame.ascii());
-    console.log(newGame.gameStatus());
 
     //select UserVSUser or AI mode
-    if (playerTwo === "ai") {
+    if (playerTwo === strings.ai) {
       //get difficulty inserted by user
       const difficulty: string = await GameClass.getDifficulty(
         req.body.id_game
@@ -99,12 +100,9 @@ export async function makeMove(req: any, res: any) {
       //create AI move in db if game is not over
       if (!newGame.gameStatus().gameOver) {
         const play: any = newGame.playAI(difficulty); //ai plays
-        console.log("Ai has played column: ", play);
-        console.log(newGame.ascii());
-        console.log(newGame.gameStatus());
         await MoveClass.Move.create({
           id_game: req.body.id_game,
-          email: "ai",
+          email: strings.ai,
           column_move: play,
         });
       }
@@ -113,10 +111,15 @@ export async function makeMove(req: any, res: any) {
     const msg: string = controllerSuccessMsg(SuccEnum.SuccessNewMove, res);
 
     if (newGame.gameStatus().gameOver) {
-      await GameClass.updateGameOver(req.body.id_game, "GameOver");
-      const winner: string = await GameClass.updateWinnerByNumber(
+      const winner: string = await GameClass.winnerByNumber(
         req.body.id_game,
         newGame.gameStatus().winner
+      );
+      await GameClass.updateGameAttributes(
+        req.body.id_game,
+        strings.gameOver,
+        strings.gameOver,
+        winner
       );
       res.send(
         msg + "\n Game is over \n Winner is: " + winner + "\n" + newGame.ascii()
@@ -124,7 +127,7 @@ export async function makeMove(req: any, res: any) {
       return;
     }
 
-    res.send(msg + "\n" + newGame.ascii());
+    res.send(msg + "\n Game ID: " + req.body.id_game + "\n" + newGame.ascii());
   } catch (err) {
     controllerErrorHandler(err, res);
   }
@@ -141,7 +144,7 @@ export async function viewGamesByUser(req: any, res: any) {
     const userReq = req.user.email;
     let totalGames: any = []; //array where games found in DB will be pushed
 
-    if (req.query.take === "between") {
+    if (req.query.take === strings.between) {
       //user wants a range of dates
       //localhost:8080/viewGamesByUser?take=between&dateOne=2020-09-08&dateTwo=2022-09-10
       totalGames = await GameClass.getGameByDateBetween(
@@ -149,7 +152,7 @@ export async function viewGamesByUser(req: any, res: any) {
         req.query.dateOne,
         req.query.dateTwo
       );
-    } else if (req.query.take === "greaterThan") {
+    } else if (req.query.take === strings.greaterThan) {
       //user wants games from a certain date on
       //localhost:8080/viewGamesByUser?take=greaterThan&date=2020-09-08
       console.log(req.query.date);
@@ -157,7 +160,7 @@ export async function viewGamesByUser(req: any, res: any) {
         userReq,
         req.query.date
       );
-    } else if (req.query.take === "lessThan") {
+    } else if (req.query.take === strings.lessThan) {
       //user wants games before a certain date
       //localhost:8080/viewGamesByUser?take=lessThan&date=2020-09-08
       totalGames = await GameClass.getGameByDateLessThan(
@@ -172,21 +175,21 @@ export async function viewGamesByUser(req: any, res: any) {
       //for every game of the user, take the winner, the modality, the number of moves e the start date
       let hasWon: string; //see if user has won the game
       if (el.winner === userReq) {
-        hasWon = "Yes";
+        hasWon = strings.yes;
       } else {
-        if (el.winner === "Draw") {
-          hasWon = "Draw";
+        if (el.winner === strings.draw) {
+          hasWon = strings.draw;
         } else {
-          hasWon = "No";
+          hasWon = strings.no;
         }
       }
 
       //see game's modality
       let gameModality: string;
-      if (el.playerTwo === "ai") {
-        gameModality = "Versus AI";
+      if (el.playerTwo === strings.ai) {
+        gameModality = strings.vsAI;
       } else {
-        gameModality = "User VS User";
+        gameModality = strings.vsUser;
       }
 
       //count number of moves
@@ -242,8 +245,7 @@ export async function stateGame(req: any, res: any) {
       } //if there is not moves in the last hour the player is out of time
     }
 
-    movesByGame.forEach((el) => moveArr.push(el.column_move));
-    console.log("Set of all moves: ", moveArr); //array of moves (columns) in the game
+    movesByGame.forEach((el) => moveArr.push(el.column_move)); //array of moves (columns) in the game
 
     let newGame = new Connect4AI();
 
@@ -298,18 +300,18 @@ export async function getMovesList(req: any, res: any) {
   try {
     let stringMove;
     let separator = ",";
-    fs.writeFileSync("moves.json", "");
+    fs.writeFileSync(strings.movesJSON, "");
     const moves = await MoveClass.findMovesbyGame(req.body.id_game); //get all moves from DB
-    if (req.body.format === "csv") {
+    if (req.body.format === strings.CSV) {
       //if selected format is CSV prepare the header of file
       separator = req.body.separator;
       const sepHead = "sep = " + separator + "\n";
       const head = "Player" + separator + "Move" + separator + "Time \n";
-      fs.writeFileSync("moves.csv", sepHead);
-      fs.appendFileSync("moves.csv", head);
+      fs.writeFileSync(strings.movesCSV, sepHead);
+      fs.appendFileSync(strings.movesCSV, head);
     }
     moves.forEach((move: any) => {
-      if (req.body.format === "csv") {
+      if (req.body.format === strings.CSV) {
         stringMove = //prepare the correct format to CSV
           move.email +
           separator +
@@ -317,12 +319,12 @@ export async function getMovesList(req: any, res: any) {
           separator +
           move.timestamp_move +
           "\n";
-        fs.appendFileSync("moves.csv", stringMove); //add a row for each iteration
+        fs.appendFileSync(strings.movesCSV, stringMove); //add a row for each iteration
       }
     });
-    if (req.body.format === "json") {
+    if (req.body.format === strings.JSON) {
       stringMove = JSON.stringify(moves); //stringify the JSON to write it in the file
-      fs.appendFileSync("moves.json", stringMove); //add a move for each iteration
+      fs.appendFileSync(strings.movesJSON, stringMove); //add a move for each iteration
     }
   } catch (err) {
     controllerErrorHandler(err, res);

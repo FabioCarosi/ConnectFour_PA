@@ -1,9 +1,9 @@
 import * as body from "./body_validation";
 import * as game from "./game_validation";
 import * as Jwt from "./Jwt";
+import * as root from "./root_validation";
 import * as validErrHandler from "./validationErrorHandler";
 import * as view from "./view_validation";
-import * as root from "./root_validation";
 
 /*
   Chain of responsability
@@ -60,7 +60,7 @@ export const viewValidation = [
 //chain for validation of /stateGame root
 export const stateValidation = [
   body.leaveBodyValidation,
-  Jwt.checkAuthMove,
+  Jwt.checkUserExistence,
   game.checkGameExistence,
   validErrHandler.validErrorHandler,
 ];
@@ -85,5 +85,5 @@ export const listValidation = [
 
 export const rootValidation = [
   root.rootValidation,
-  validErrHandler.validErrorHandler
-]
+  validErrHandler.validErrorHandler,
+];

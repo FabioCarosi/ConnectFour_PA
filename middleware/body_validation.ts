@@ -1,4 +1,5 @@
 import { ErrEnum } from "../Factory/ErrorFactory";
+import * as strings from "../strings";
 
 /*
   Here, there are all the middleware functions that validates request's body
@@ -8,23 +9,19 @@ export async function gameBodyValidation(req: any, res: any, next: any) {
   try {
     const user = req.body.playerTwo;
     let checkAI: boolean = true;
-    enum typeDiff {
-      one = "easy",
-      two = "medium",
-      three = "hard"
 
-    }
-    if( user === "ai" ){
+    if (user === strings.ai) {
       const difficulty = req.body.difficulty;
-      if((typeof difficulty !== "string") 
-        && ((difficulty !== typeDiff.one) 
-            || (difficulty !== typeDiff.two)
-            || (difficulty !== typeDiff.three))){
-
+      if (
+        typeof difficulty !== "string" &&
+        (difficulty !== strings.easy ||
+          difficulty !== strings.medium ||
+          difficulty !== strings.hard)
+      ) {
         checkAI = false; //it is false when difficulty is not a string and is not one of the possible values of enum
       }
     }
-    if ((typeof user === "string") && checkAI) {
+    if (typeof user === "string" && checkAI) {
       next();
     } else {
       next(ErrEnum.ErrBodyFormat);
@@ -57,9 +54,7 @@ export async function moveBodyValidation(req: any, res: any, next: any) {
 export async function leaveBodyValidation(req: any, res: any, next: any) {
   try {
     const idGame = req.body.id_game;
-    if (
-      typeof idGame === "number" 
-    ) {
+    if (typeof idGame === "number") {
       next();
     } else {
       next(ErrEnum.ErrBodyFormat);
@@ -74,20 +69,13 @@ export async function listBodyValidation(req: any, res: any, next: any) {
     const idGame = req.body.id_game;
     const format = req.body.format;
     const sep = req.body.separator;
-    enum formats {
-      one = "json",
-      two = "csv"
-    }
-    enum separators {
-      one = ",",
-      two = ";",
-      three = "|"
-    }
     if (
-      ((typeof idGame === "number") 
-      && ((format === formats.one)
-      || ((format === formats.two) //when format === "csv" you must specify separator
-      && ((sep === separators.one) || (sep === separators.two) || (sep === separators.three)))))
+      typeof idGame === "number" &&
+      (format === strings.JSON ||
+        (format === strings.CSV && //when format === "csv" you must specify separator
+          (sep === strings.sep1 ||
+            sep === strings.sep2 ||
+            sep === strings.sep3)))
     ) {
       next();
     } else {
@@ -98,14 +86,15 @@ export async function listBodyValidation(req: any, res: any, next: any) {
   }
 }
 
-export async function chargeCreditBodyValidation(req: any, res: any, next: any) {
+export async function chargeCreditBodyValidation(
+  req: any,
+  res: any,
+  next: any
+) {
   try {
     const email = req.body.email;
     const credit = req.body.newCredit;
-    if (
-      ((typeof email === "string") 
-      && typeof credit === "number")
-    ) {
+    if (typeof email === "string" && typeof credit === "number") {
       next();
     } else {
       next(ErrEnum.ErrBodyFormat);

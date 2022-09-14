@@ -1,8 +1,7 @@
 var express = require("express");
 import * as controller from "./controller/controller";
-import { ErrEnum } from "./Factory/ErrorFactory";
 import * as chain from "./middleware/chain";
-import { validErrorHandler } from "./middleware/validationErrorHandler";
+import * as strings from "./strings";
 var download = require("downloadjs");
 
 const PORT = 8080;
@@ -12,7 +11,6 @@ const app = express();
 
 //It parses incoming requests with JSON payloads and is based on body-parser.
 app.use(express.json());
-
 
 app.use(chain.JwtValidation);
 
@@ -49,13 +47,13 @@ app.get("/viewGamesByUser", chain.viewValidation, (req, res) => {
 //This root allows to download the list of moves in csv or json format
 app.post("/allMoves", chain.listValidation, (req, res) => {
   controller.getMovesList(req, res).then(() => {
-    let path = "/usr/src/app/moves." + req.body.format;
+    let path = strings.path + req.body.format;
     res.download(path);
   });
 });
 
-app.post('*', chain.rootValidation); //gives back an error due to invalid root
+app.post("*", chain.rootValidation); //gives back an error due to invalid root
 
-app.get('*', chain.rootValidation); //gives back an error due to invalid root
+app.get("*", chain.rootValidation); //gives back an error due to invalid root
 
 app.listen(PORT, HOST);

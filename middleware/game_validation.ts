@@ -1,6 +1,7 @@
 import { ErrEnum } from "../Factory/ErrorFactory";
 import * as GameClass from "../models/game";
 import * as UserClass from "../models/user";
+import * as strings from "../strings";
 
 //check if id_game of the move corrisponds to an existing game
 export async function checkGameExistence(req: any, res: any, next: any) {
@@ -49,7 +50,6 @@ export async function adapterCheckPlayerTwo(req: any, res: any, next: any) {
   }
 }
 
-
 //check if id_game specified corrisponds to a game "In progress"
 //If game is over, that middleware returns error
 export async function isGameOver(req: any, res: any, next: any) {
@@ -59,7 +59,8 @@ export async function isGameOver(req: any, res: any, next: any) {
       attributes: ["status"],
     }).then((game: any) => {
       console.log(game.status);
-      if (game.status !== "In progress") { //game is over or out of time 
+      if (game.status !== strings.inProgress) {
+        //game is over or out of time
         next(ErrEnum.ErrGameOver);
       } else {
         next();
@@ -69,5 +70,3 @@ export async function isGameOver(req: any, res: any, next: any) {
     next(ErrEnum.GenericError);
   }
 }
-
-

@@ -1,23 +1,37 @@
-export const string_gameOver: string = "Game Over";
-export const string_outOfTime: string = "Out Of Time";
-export const string_leaveGame: string = "Abandoned match";
+export const gameOver: string = "Game Over";
+export const outOfTime: string = "Out Of Time";
+export const leaveGame: string = "Abandoned Match";
+export const created: string = "Created";
+export const currentPlayer: string = "Current Player";
 
-export const string_inProgress: string = "In Progress";
-export const string_draw: string = "Draw";
-export const string_ai: string = "ai";
-export const string_noWinner: string = "No Winner";
+export const ai: string = "ai";
+export const AI: string = "AI";
 
-export const string_between: string = "between";
-export const string_greaterThan: string = "greaterThan";
-export const string_lessThan: string = "lessThan";
+export const easy: string = "easy";
+export const medium: string = "medium";
+export const hard: string = "hard";
 
-export const string_yes: string = "Yes";
-export const string_no: string = "No";
-export const string_vsAI: string = "Versus AI";
-export const string_vsUser: string = "User VS User";
+export const inProgress: string = "In Progress";
+export const draw: string = "Draw";
+export const noWinner: string = "No Winner";
 
-export const string_path: string = "/usr/src/app/moves.";
-export const string_movesJSON: string = "moves.json";
-export const string_movesCSV: string = "moves.csv";
-export const string_JSON: string = "json";
-export const string_CSV: string = "csv";
+export const between: string = "between";
+export const greaterThan: string = "greaterThan";
+export const lessThan: string = "lessThan";
+
+export const yes: string = "Yes";
+export const no: string = "No";
+export const vsAI: string = "Versus AI";
+export const vsUser: string = "User VS User";
+
+export const path: string = "/usr/src/app/moves.";
+export const movesJSON: string = "moves.json";
+export const movesCSV: string = "moves.csv";
+export const JSON: string = "json";
+export const CSV: string = "csv";
+export const sep1: string = ",";
+export const sep2: string = ";";
+export const sep3: string = "|";
+
+export const admin: string = "admin";
+export const player: string = "player";
