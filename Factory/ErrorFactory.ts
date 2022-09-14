@@ -158,6 +158,16 @@ class ErrInvalidMove implements Message {
   }
 }
 
+class ErrInvalidRoot implements Message {
+  getMsg(): { msgString: string; msgStatus: number } {
+    return {
+      msgStatus: StatusCode.ClientErrorNotFound, //404
+      //The root called doesn't have any content 
+      msgString: "404 - Content not found",
+    };
+  }
+}
+
 export enum ErrEnum {
   GenericError,
   NoAuthHeader,
@@ -174,7 +184,8 @@ export enum ErrEnum {
   ErrGameOver,
   ErrBodyFormat,
   ErrGetFormat,
-  ErrInvalidMove
+  ErrInvalidMove,
+  ErrInvalidRoot
 }
 
 export class ErrorFactory {
@@ -229,6 +240,9 @@ export class ErrorFactory {
         break;
       case ErrEnum.ErrInvalidMove:
         msgError = new ErrInvalidMove();
+        break;
+      case ErrEnum.ErrInvalidRoot:
+        msgError = new ErrInvalidRoot();
         break;
       default:
         msgError = new GenericError();

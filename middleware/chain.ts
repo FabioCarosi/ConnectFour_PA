@@ -3,6 +3,7 @@ import * as game from "./game_validation";
 import * as Jwt from "./Jwt";
 import * as validErrHandler from "./validationErrorHandler";
 import * as view from "./view_validation";
+import * as root from "./root_validation";
 
 /*
   Chain of responsability
@@ -81,3 +82,8 @@ export const listValidation = [
   game.checkGameExistence,
   validErrHandler.validErrorHandler,
 ];
+
+export const rootValidation = [
+  root.rootValidation,
+  validErrHandler.validErrorHandler
+]

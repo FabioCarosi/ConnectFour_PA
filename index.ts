@@ -1,6 +1,8 @@
 var express = require("express");
 import * as controller from "./controller/controller";
+import { ErrEnum } from "./Factory/ErrorFactory";
 import * as chain from "./middleware/chain";
+import { validErrorHandler } from "./middleware/validationErrorHandler";
 var download = require("downloadjs");
 
 const PORT = 8080;
@@ -10,21 +12,9 @@ const app = express();
 
 //It parses incoming requests with JSON payloads and is based on body-parser.
 app.use(express.json());
-var myLogger = function (req, res, next) {
-  console.log("LOGGED");
-  next();
-};
 
-app.use(myLogger);
+
 app.use(chain.JwtValidation);
-
-app.get("/", (req, res) => {
-  res.send("Hello");
-});
-
-app.get("/test", (req, res) => {
-  res.send("Hello Fabio");
-});
 
 //This root allows to start a new game
 app.post("/startGame", chain.gameValidation, (req, res) => {
@@ -64,5 +54,9 @@ app.post("/allMoves", chain.listValidation, (req, res) => {
   })
   
  });
+
+app.post('*', chain.rootValidation); //gives back an error due to invalid root
+
+app.get('*', chain.rootValidation); //gives back an error due to invalid root
 
 app.listen(PORT, HOST);
