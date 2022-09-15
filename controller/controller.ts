@@ -113,7 +113,7 @@ export async function makeMove(req: any, res: any) {
       let numWinner = newGame.gameStatus().winner; //number of winner: 1,2 or null if is draw
       let winner: string = strings.noWinner;
 
-      if (numWinner !== 1 || numWinner !== 2) {
+      if (numWinner !== 1 && numWinner !== 2) {
         //if winner is not 1 or 2 the game is draw
         winner = strings.draw; //then winner is set to Draw
       } else {
