@@ -368,7 +368,8 @@ localhost:8080/viewGamesByUser?take=lessThan&date=2022-09-16
 ### **/allMoves**
 
 Questa rotta permette di scaricare in formato JSON o CSV la lista di tutte le mosse di una certa partita. Dopo aver verificato la correttezza del body della richiesta, si controlla l’esistenza dell’utente che invia la richiesta e del gioco specificato nel body della richiesta.
-N.B: Per ottenere il file dell'estensione desiderata in ambiente Postman è necessario scaricare la response dopo aver inviato la request oppure selezionando l'apposita voce "Send and Dowload" al momento dell'invio della rotta.
+
+**N.B**: Per ottenere il file dell'estensione desiderata in ambiente Postman è necessario scaricare la response dopo aver inviato la request oppure selezionando l'apposita voce "Send and Dowload" al momento dell'invio della rotta.
 
 Di seguito viene mostrato un esempio di payload valido nel body della richiesta nei due diversi formati:
 Formato JSON
