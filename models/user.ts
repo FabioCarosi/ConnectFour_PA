@@ -32,7 +32,7 @@ export async function findPlayerOneByGame(idGame) {
     raw: true,
   });
   const user: string = game.playerOne;
-  return user;
+  return user; //return the string of the email
 }
 
 //find playerTwo of a game
@@ -42,7 +42,7 @@ export async function findPlayerTwoByGame(idGame) {
     raw: true,
   });
   const user: string = game.playerTwo;
-  return user;
+  return user; //return the string of the email
 }
 
 //find the current turn of a game
@@ -52,7 +52,7 @@ export async function findPlayerTurn(idGame) {
     raw: true,
   });
   const user: string = game.turn;
-  return user;
+  return user; //return the string of the email
 }
 
 //find user's credit
@@ -63,12 +63,14 @@ export async function getCredit(emailUser: string) {
     raw: true,
   });
   const credit: number = user.credit;
-  return credit;
+  return credit; //return the number of credits remaining
 }
 
 //update user's credit
 export async function updateCredit(emailUser, lessCredit) {
   await User.increment(
+    //it decreases when the game starts and after each move
+    //it increases when the admin recharges the credit
     { credit: -lessCredit },
     {
       where: { email: emailUser },
@@ -77,11 +79,11 @@ export async function updateCredit(emailUser, lessCredit) {
 }
 
 export async function findWinnerOutTime(idGame) {
-  let user1: string = await findPlayerOneByGame(idGame);
-  let user2: string = await findPlayerTwoByGame(idGame);
-  let turn: string = await findPlayerTurn(idGame);
-  if (turn === user1) return user2;
-  if (turn === user2) return user1;
+  let user1: string = await findPlayerOneByGame(idGame); //find player 1
+  let user2: string = await findPlayerTwoByGame(idGame); //find player 2
+  let turn: string = await findPlayerTurn(idGame); //find the player who has to make the move
+  if (turn === user1) return user2; //if it is player 1's turn then player 2 returns
+  if (turn === user2) return user1; //if it is player 2's turn then player 1 returns
 }
 
 export async function findUserAdmin(emailUser) {
@@ -89,5 +91,5 @@ export async function findUserAdmin(emailUser) {
     where: { email: emailUser },
   });
   const role: string = user.role;
-  return role;
+  return role; //return the role saved in db
 }

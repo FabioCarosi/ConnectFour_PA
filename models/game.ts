@@ -59,7 +59,7 @@ export const Game = connection.define(
 );
 
 /*
-update game status in "In progress" when a new game is created
+update game status in "In Progress" when a new game is created
 When playerOne creates the game, it is playerOne's turn
 */
 Game.addHook("afterCreate", async (game: any, options) => {
@@ -67,6 +67,7 @@ Game.addHook("afterCreate", async (game: any, options) => {
 });
 
 export async function getGame(idGame) {
+  //return the game with all its attributes
   const game = await Game.findByPk(idGame);
   return game;
 }
@@ -145,9 +146,10 @@ export async function getDifficulty(idGame: any) {
 export async function winnerByNumber(idGame, winner: number) {
   let email: string = "";
   if (winner === 1) {
+    //if the winner is player 1 his email is selected
     email = await UserClass.findPlayerOneByGame(idGame);
-  }
-  if (winner === 2) {
+  } else if (winner === 2) {
+    //if the winner is player 2 his email is selected
     email = await UserClass.findPlayerTwoByGame(idGame);
   }
   return email;
@@ -159,8 +161,8 @@ export async function leaveMatch(req: any, res: any) {
   const game: any = await getGame(req.body.id_game);
   const leaveState = game.leaveState;
 
-  const user1: string = await UserClass.findPlayerOneByGame(req.body.id_game);
-  const user2: string = await UserClass.findPlayerTwoByGame(req.body.id_game);
+  const user1: string = await UserClass.findPlayerOneByGame(req.body.id_game); //email of player 1
+  const user2: string = await UserClass.findPlayerTwoByGame(req.body.id_game); //email of player 2
 
   if (
     (req.user.email === user1 && leaveState === user2) || //if the other player has already requested abandonment

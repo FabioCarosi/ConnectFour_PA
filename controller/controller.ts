@@ -18,11 +18,9 @@ export async function startGame(req: any, res: any): Promise<void> {
   try {
     req.body.playerOne = req.user.email; //playerOne in body's request is instantiated with the user's email in JWT payload
     let lessCredit = 0.35; //amount of credity that will be decreased to playerOne
-    if (req.body.playerTwo === strings.AI) req.body.playerTwo = strings.ai;
+    if (req.body.playerTwo === strings.AI) req.body.playerTwo = strings.ai; //save in the correct way the ai
 
-    /*
-    Here, a new Game istance is created in DB
-    */
+    //Here, a new Game istance is created in DB
     await GameClass.Game.create(req.body).then((game: any) => {
       console.log("Game has started"); //successFactory
       //update PlayerOne's credit
@@ -61,14 +59,14 @@ export async function makeMove(req: any, res: any) {
 
     if (movesByGame.length !== 0) {
       //if there are moves
-      const bool = await MoveClass.checkLastHourMoves(req); //then check if there are moves in the last hour
+      const bool = await MoveClass.checkLastHourMoves(req); //then check if there are moves in the last hour and it stops the game if there are no moves
       if (bool) {
-        res.send("Game Over: You are out of time!");
+        res.send("Game Over: You are out of time!"); //if there are no moves in the last hour of the current game
         return;
       } //if there is not moves in the last hour the player is out of time
     }
 
-    movesByGame.forEach((el) => moveArr.push(el.column_move));
+    movesByGame.forEach((el) => moveArr.push(el.column_move)); //all moves in db are pushed in array
 
     //Find playerTwo in the game to select IA or UserVSUser mode
     const playerTwo: string = await UserClass.findPlayerTwoByGame(
@@ -78,7 +76,7 @@ export async function makeMove(req: any, res: any) {
     let newGame = new Connect4AI();
 
     moveArr.forEach((el) => {
-      newGame.play(el);
+      newGame.play(el); //all saved moves are played to return to the current situation
     });
 
     //check if move in column_move is valid or not before saving it in DB
@@ -101,6 +99,7 @@ export async function makeMove(req: any, res: any) {
       if (!newGame.gameStatus().gameOver) {
         const play: any = newGame.playAI(difficulty); //ai plays
         await MoveClass.Move.create({
+          //save the AI ​​move in the database
           id_game: req.body.id_game,
           email: strings.ai,
           column_move: play,
@@ -111,7 +110,7 @@ export async function makeMove(req: any, res: any) {
     const msg: string = controllerSuccessMsg(SuccEnum.SuccessNewMove, res);
 
     if (newGame.gameStatus().gameOver) {
-      let numWinner = newGame.gameStatus().winner;
+      let numWinner = newGame.gameStatus().winner; //number of winner: 1,2 or null if is draw
       let winner: string = strings.noWinner;
 
       if (numWinner !== 1 || numWinner !== 2) {
@@ -119,16 +118,18 @@ export async function makeMove(req: any, res: any) {
         winner = strings.draw; //then winner is set to Draw
       } else {
         winner = await GameClass.winnerByNumber(
+          //else the winner is the email of winner player
           req.body.id_game,
           newGame.gameStatus().winner
         );
       }
 
       await GameClass.updateGameAttributes(
+        //update the winner, the status of the game and the status of the draw request
         req.body.id_game,
-        strings.gameOver,
-        strings.gameOver,
-        winner
+        strings.gameOver, //draw status = Game Over
+        strings.gameOver, //game status = Game Over
+        winner // winner = email player
       );
       res.send(
         msg + "\n Game is over \n Winner is: " + winner + "\n" + newGame.ascii()
@@ -245,7 +246,7 @@ export async function stateGame(req: any, res: any) {
     let moveArr: number[] = [];
     //find all moves corrisponding to id_game of current game
     const movesByGame: any = await MoveClass.findMovesbyGame(req.body.id_game);
-    const game: any = await GameClass.getGame(req.body.id_game);
+    const game: any = await GameClass.getGame(req.body.id_game); //return the attributes of the game saved in db
     const status: string = game.status;
     if (movesByGame.length !== 0 && status === strings.inProgress) {
       //if there are moves
@@ -261,7 +262,7 @@ export async function stateGame(req: any, res: any) {
     let newGame = new Connect4AI();
 
     moveArr.forEach((el) => {
-      newGame.play(el);
+      newGame.play(el); //all saved moves are played to return to the current situation
     });
 
     const table = newGame.ascii(); //table of game
@@ -295,7 +296,7 @@ export async function chargeCredit(req: any, res: any) {
   try {
     const newCredit = req.body.newCredit;
     const emailUser = req.body.email;
-    await UserClass.updateCredit(emailUser, -newCredit);
+    await UserClass.updateCredit(emailUser, -newCredit); //increment the credit
     const msg: string = controllerSuccessMsg(
       SuccEnum.SuccessCreditUpdated,
       res
@@ -310,12 +311,12 @@ export async function chargeCredit(req: any, res: any) {
 export async function getMovesList(req: any, res: any) {
   try {
     let stringMove;
-    let separator = ",";
+    let separator = strings.sep1; //default separator
     fs.writeFileSync(strings.movesJSON, "");
     const moves = await MoveClass.findMovesbyGame(req.body.id_game); //get all moves from DB
     if (req.body.format === strings.CSV) {
       //if selected format is CSV prepare the header of file
-      separator = req.body.separator;
+      separator = req.body.separator; //separator is selected by user
       const sepHead = "sep = " + separator + "\n";
       const head = "Player" + separator + "Move" + separator + "Time \n";
       fs.writeFileSync(strings.movesCSV, sepHead);

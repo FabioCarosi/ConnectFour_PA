@@ -84,29 +84,33 @@ export async function findMovesbyGame(idGame: any) {
 
 //function that check how much time has passed from the latest move
 export async function checkLastHourMoves(req: any) {
-  let dt = new Date();
+  let dt = new Date(); //current time
 
-  dt.setHours(dt.getHours() - 1);
+  dt.setHours(dt.getHours() - 1); //current time minus 1hr
   console.log(dt);
 
   const latestMoves = await Move.findAll({
     where: {
       id_game: req.body.id_game,
       timestamp_move: {
-        [Op.gt]: dt,
+        [Op.gt]: dt, //findAll move in the last hour
       },
     },
   });
   if (latestMoves.length === 0) {
+    //if there are no moves
+    //then the winner is the one who made the last move
+    //that is, the one who does not have the turn
     const opponent = await UserClass.findWinnerOutTime(req.body.id_game);
     await GameClass.updateGameAttributes(
+      //then update the game as Out Of Time
       req.body.id_game,
-      strings.outOfTime,
-      strings.outOfTime,
-      opponent
+      strings.outOfTime, //draw status = Out of Time
+      strings.outOfTime, //game status = Out of Time
+      opponent //the winner is the opponent of whoever has to make the move
     );
-    return true;
+    return true; //return true if the game is over
   } else {
-    return false;
+    return false; //return false if the game is still in progress
   }
 }
