@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "0ee6f9d1-73c4-4cef-be14-dc8f2e5ded36",
+		"_postman_id": "6875506b-284b-40c4-b10e-87e511d1b8e8",
 		"name": "Game Test",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "14236211"
@@ -506,7 +506,8 @@
 							"path": [
 								"makeMove"
 							]
-						}
+						},
+						"description": "This is an example of a move out of time. A match against AI has been inserted in the database seed and has been running for more than an hour, as soon as the player tries to play the move the match is canceled. If the request is sent twice, it is noted that the game is correctly considered concluded."
 					},
 					"response": []
 				}
