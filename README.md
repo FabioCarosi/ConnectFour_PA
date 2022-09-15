@@ -463,7 +463,7 @@ Model-View-Controller è un pattern architetturale. In questo progetto non è st
 
 # Avvio dell'applicazione
 
-- Per avviare l’applicazione è necessario avere l’ambiente [Docker](https://www.docker.com/) installato sulla propria macchina
+- Per avviare l’applicazione è necessario avere l’ambiente [Docker](https://www.docker.com/) installato e in esecuzione sulla propria macchina
 - Clonare la repository da terminale tramite il comando:
 
 ```
