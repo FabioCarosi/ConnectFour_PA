@@ -55,11 +55,11 @@ In particolare, sono richieste le seguenti specifiche per l’implementazione de
 
 Sono stati utilizzati i seguenti strumenti per l’implementazione del servizio:
 
-- Visual Studio Code
-- Postman
-- Docker
+- [Visual Studio Code](https://code.visualstudio.com/)
+- [Postman](https://www.postman.com/)
+- [Docker](https://www.docker.com/)
 
-In Docker, è stato utilizzato un ulteriore strumento chiamato Adminer, che ha permesso una visualizzazione grafica migliore del DB.
+In Docker, è stato utilizzato un ulteriore strumento chiamato [Adminer](https://www.adminer.org/), che ha permesso una visualizzazione grafica migliore del DB.
 
 ---
 
@@ -462,7 +462,7 @@ Model-View-Controller è un pattern architetturale. In questo progetto non è st
 
 # Avvio dell'applicazione
 
-- Per avviare l’applicazione è necessario avere l’ambiente Docker installato sulla propria macchina
+- Per avviare l’applicazione è necessario avere l’ambiente [Docker](https://www.docker.com/) installato sulla propria macchina
 - Clonare la repository da terminale tramite il comando:
 
 ```
@@ -495,7 +495,7 @@ npm i
 docker-compose up
 ```
 
-- L’applicazione è accessibile all’indirizzo `localhost:8080`, mentre all’indirizzo `localhost:8082` è accessibile lo strumento Adminer per la visualizzazione del database.
+- L’applicazione è accessibile all’indirizzo `localhost:8080`, mentre all’indirizzo `localhost:8082` è accessibile lo strumento [Adminer](https://www.adminer.org/) per la visualizzazione del database.
 
 ## Test
 
@@ -505,4 +505,4 @@ Per il testing è possibile importare all’interno della piattaforma Postman il
 
 ### Ringraziamenti
 
-W001260 - Prof. **Adriano Mancini** - Programmazione Avanzata
+W001260 - **Prof. Adriano Mancini** - Programmazione Avanzata
