@@ -488,7 +488,7 @@ MYSQL_ALLOW_EMPTY_PASSWORD=no
 - Eseguire all’interno della cartella del progetto il comando da terminale:
 
 ```
-docker-compose up
+docker compose up
 ```
 
 - L’applicazione è accessibile all’indirizzo `localhost:8080`, mentre all’indirizzo `localhost:8082` è accessibile lo strumento [Adminer](https://www.adminer.org/) per la visualizzazione del database.
