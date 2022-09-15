@@ -61,7 +61,7 @@ Sono stati utilizzati i seguenti strumenti per l’implementazione del servizio:
 
 In Docker, è stato utilizzato un ulteriore strumento chiamato [Adminer](https://www.adminer.org/), che ha permesso una visualizzazione grafica migliore del DB.
 
----
+
 
 ### Linguaggi
 
