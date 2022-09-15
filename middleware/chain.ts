@@ -75,7 +75,7 @@ export const chargeValidation = [
   validErrHandler.validErrorHandler,
 ];
 
-//chain for validation of //allMoves root
+//chain for validation of /allMoves root
 export const listValidation = [
   body.listBodyValidation,
   Jwt.checkUserExistence,

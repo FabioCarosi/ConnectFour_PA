@@ -4,23 +4,26 @@
 
 ### **Indice**
 
-* [Autori](#autor)
-* [Obiettivo del progetto](#obiettivo)
-* [Diagrammi UML](#diagrammi)
-* [Rotte](#rotte)
-* [Pattern](#pattern)
-* [Avvio dell'applicazione](#avvio)
-
+- [Autori](#autor)
+- [Obiettivo del progetto](#obiettivo)
+- [Diagrammi UML](#diagrammi)
+- [Rotte](#rotte)
+- [Pattern](#pattern)
+- [Avvio dell'applicazione](#avvio)
 
 ---
+
 <a name="autor"></a>
+
 ### Autori
 
 - [Carosi Fabio](https://github.com/FabioCarosi)
 - [Rossetti Cristina](https://github.com/CristinaRossetti)
 
 ---
+
 <a name="obiettivo"></a>
+
 # Obiettivo del progetto
 
 L’obiettivo principale del progetto consiste nella realizzazione di un servizio back-end per la gestione del gioco del “_forza4_” (_connect four_).
@@ -79,13 +82,14 @@ In Docker, è stato utilizzato un ulteriore strumento chiamato Adminer, che ha p
 - [status-code-enum](https://www.npmjs.com/package/status-code-enum)
 
 ---
+
 <a name="diagrammi"></a>
+
 # Diagrammi
 
 ## Diagramma dei casi d’uso
 
 ![casiUso](utils/useCase.png)
-
 
 ## Diagrammi delle sequenze
 
@@ -116,7 +120,6 @@ In Docker, è stato utilizzato un ulteriore strumento chiamato Adminer, che ha p
 ### Visualizza le partite svolte da un utente
 
 ![viewGameByUser](utils/viewGameByUser.png)
-
 
 ## Modello ER
 
@@ -161,6 +164,7 @@ In Docker, è stato utilizzato un ulteriore strumento chiamato Adminer, che ha p
 ---
 
 <a name="rotte"></a>
+
 # Richieste
 
 | Rotta            | Tipo | Autenticazione JWT |
@@ -428,7 +432,9 @@ player1@email.com,5,Wed Sep 14 2022 14:58:23 GMT+0200 (Central European Summer T
 ```
 
 ---
+
 <a name="pattern"></a>
+
 # Pattern Utilizzati
 
 ### Singleton
@@ -451,7 +457,9 @@ In questo progetto, questo pattern viene utilizzato per la creazione dei diversi
 Model-View-Controller è un pattern architetturale. In questo progetto non è stata implementata la View, ma solamente la parte di back-end. Il Model ha permesso di gestire tutto il DB e le operazioni su di esso, mentre la componente di Controller ha consentito la gestione dell’interazione dell’utente con l’applicazione, ovvero tutte le funzioni che vengono chiamate una volta che viene richiamata una certa rotta.
 
 ---
+
 <a name="avvio"></a>
+
 # Avvio dell'applicazione
 
 - Per avviare l’applicazione è necessario avere l’ambiente Docker installato sulla propria macchina
@@ -475,6 +483,12 @@ MYSQL_HOST=db
 MYSQL_ALLOW_EMPTY_PASSWORD=no
 ```
 
+- Eseguire all’interno della cartella del progetto il seguente comando da terminale per installare tutti i pacchetti necessari:
+
+```
+npm i
+```
+
 - Eseguire all’interno della cartella del progetto il comando da terminale:
 
 ```
@@ -485,7 +499,7 @@ docker-compose up
 
 ## Test
 
-Per il testing è possibile importare all’interno della piattaforma Postman il file `GameTest.json` in cui  è stato inserito un insieme degli scenari possibili. Si consiglia di seguire l'ordine in cui sono presentate le rotte in modo da evitare possibili conflitti con i dati già presenti nel database.
+Per il testing è possibile importare all’interno della piattaforma Postman il file `GameTest.json` in cui è stato inserito un insieme degli scenari possibili. Si consiglia di seguire l'ordine in cui sono presentate le rotte in modo da evitare possibili conflitti con i dati già presenti nel database.
 
 ---
 
