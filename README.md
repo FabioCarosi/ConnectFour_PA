@@ -368,7 +368,8 @@ localhost:8080/viewGamesByUser?take=lessThan&date=2022-09-16
 ### **/allMoves**
 
 Questa rotta permette di scaricare in formato JSON o CSV la lista di tutte le mosse di una certa partita. Dopo aver verificato la correttezza del body della richiesta, si controlla l’esistenza dell’utente che invia la richiesta e del gioco specificato nel body della richiesta.
-N.B: Per ottenere il file dell'estensione desiderata in ambiente Postman è necessario scaricare la response dopo aver inviato la request oppure selezionando l'apposita voce "Send and Dowload" al momento dell'invio della rotta.
+
+**N.B**: Per ottenere il file dell'estensione desiderata in ambiente Postman è necessario scaricare la response dopo aver inviato la request oppure selezionando l'apposita voce "Send and Dowload" al momento dell'invio della rotta.
 
 Di seguito viene mostrato un esempio di payload valido nel body della richiesta nei due diversi formati:
 Formato JSON
@@ -463,7 +464,7 @@ Model-View-Controller è un pattern architetturale. In questo progetto non è st
 
 # Avvio dell'applicazione
 
-- Per avviare l’applicazione è necessario avere l’ambiente [Docker](https://www.docker.com/) installato sulla propria macchina
+- Per avviare l’applicazione è necessario avere l’ambiente [Docker](https://www.docker.com/) installato e in esecuzione sulla propria macchina
 - Clonare la repository da terminale tramite il comando:
 
 ```
@@ -487,7 +488,7 @@ MYSQL_ALLOW_EMPTY_PASSWORD=no
 - Eseguire all’interno della cartella del progetto il comando da terminale:
 
 ```
-docker-compose up
+docker compose up
 ```
 
 - L’applicazione è accessibile all’indirizzo `localhost:8080`, mentre all’indirizzo `localhost:8082` è accessibile lo strumento [Adminer](https://www.adminer.org/) per la visualizzazione del database.
